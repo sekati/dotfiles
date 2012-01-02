@@ -1,0 +1,258 @@
+#!/bin/sh
+# Sekati: Configure XEN Clone
+# @author jason m horwitz | sekati.com
+# Copyright (C) 2010 jason m horwitz, Sekat LLC. All Rights Reserved.
+
+NAME="XMCloneConfigurator"
+VERSION="1.0.6"
+DIALOG=${DIALOG=dialog}
+if [ -z $DISPLAY ]; then
+	DIALOG=dialog
+else
+	DIALOG=Xdialog
+fi
+#######################################
+# VM IP TABLE
+#######################################
+VM1IP="208.66.135.66"
+VM2IP="208.66.135.70"
+DOM0IP="208.66.135.80"
+VM3IP="208.66.135.81"
+VM4IP="208.66.135.80"
+#######################################
+# VM NAME TABLE
+DOM0="xen"
+VM1="vm1"
+VM2="vm2"
+VM3="vm3"
+VM4="vm4"
+DOM=".sekati.com"
+#######################################
+
+# progressBar [backTitle, guageTitle, startMessage, progressMessage, sleepFloat]
+# @usage: progressBar "Back Title" "Gauge Title" "Initializing ..." "Progress ..." 0.25
+progressBar() {
+        DIALOG=${DIALOG=dialog}
+        COUNT=10
+        (
+        while test $COUNT != 110
+        do
+        echo $COUNT
+        echo "XXX"
+        echo "$4 $COUNT%"
+        echo "XXX"
+        COUNT=`expr $COUNT + 10`
+        sleep $5
+        done) | $DIALOG --backtitle " $1" --title "$2" --gauge "$3" 24 80 0
+}
+
+# confirmDialog [title, question]
+confirmDialog() {
+	$DIALOG --backtitle "$NAME v$VERSION" --title "$1" --clear --yesno "\n$2" 24 80
+	case $? in
+	0)
+	;;
+  	1)
+	die "Exiting ..."
+	;;
+  	255)
+	die "Exiting ..."
+	;;
+	esac
+}
+
+# textBox [file] 
+textBox() {
+	$DIALOG --backtitle "$NAME v$VERSION" --textbox $1 24 80
+}
+
+# messageBox [title, message]
+messageBox() {
+	$DIALOG --backtitle "$NAME v$VERSION" --title $1 --msgbox $2 24 80
+}
+
+# infobBox [message sleepTime]
+infoBox() {
+	$DIALOG --backtitle "$NAME v$VERSION" --infobox $1 24 80 ; $2 
+}
+
+selectSourceDialog() {
+	tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/xmcloneconfigurator-src$$
+	trap "rm -f $tempfile" 0 1 2 5 15
+	$DIALOG --backtitle " $NAME v$VERSION" --radiolist "Select the domU Clone Source:" 24 80 4 \
+	$VM1 $VM1IP ON \
+	$VM2 $VM2IP OFF \
+	$VM3 $VM3IP OFF \
+	$VM4 $VM4IP OFF 2> $tempfile
+	retval=$?
+	OLDNAME=`cat $tempfile`
+	case $retval in
+		0)
+		#confirmDialog "Confirm domU Clone Source" "This VM was cloned from $OLDNAME?"
+		;;
+		1)
+		die "Exiting ..."
+		;;
+		255)
+		die "Exiting ..."
+		;;
+	esac
+	rm $tempfile
+}
+
+selectDestDialog() {
+        tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/xmcloneconfigurator-dest$$
+        trap "rm -f $tempfile" 0 1 2 5 15
+        $DIALOG --backtitle " $NAME v$VERSION" --radiolist "Select the domU Destination Hostname:" 24 80 4 \
+        $VM1 $VM1IP OFF \
+        $VM2 $VM2IP ON \
+        $VM3 $VM3IP OFF \
+        $VM4 $VM4IP OFF 2> $tempfile
+        retval=$?
+        NEWNAME=`cat $tempfile`
+        case $retval in
+                0)
+		setSourceVars
+		setDestVars
+                #confirmDialog "Confirm domU Clone Destination" "Configure this VM Clone as $NEWNAME?\n\n(Source: $OLDNAME -> Destination: $NEWNAME)"
+                ;;
+                1)
+                die "Exiting ..."
+                ;;
+                255)
+                die "Exiting ..."
+                ;;
+        esac
+        rm $tempfile
+}
+
+setSourceVars() {
+	OLDFQNAME="$OLDNAME$DOM"
+	case $OLDNAME in
+	        $VM1)
+		OLDIP=$VM1IP
+		;;
+		$VM2)	
+		OLDIP=$VM2IP
+		;;
+		$VM3)
+		OLDIP=$VM3IP
+		;;
+		$VM4)
+		OLDIP=$VM4IP
+		;;
+	esac
+}
+
+setDestVars() {
+        FQNAME="$NEWNAME$DOM"
+        case $NEWNAME in
+                $VM1)
+                NEWIP=$VM1IP 
+                ;;
+                $VM2)
+                NEWIP=$VM2IP 
+                ;;   
+                $VM3)
+                NEWIP=$VM3IP
+                ;;   
+                $VM4)
+                NEWIP=$VM4IP
+                ;;
+        esac
+}
+
+setHostname() {
+	infoBox "Configuring Hostname ..." 3
+	hostname $FQNAME
+	echo $FQNAME > /etc/hostname
+	sed -i "s/$OLDNAME/$NEWNAME/g" /etc/hosts
+	/etc/init.d/hostname.sh
+	sysctl kernel.hostname=$FQNAME
+}
+
+setMotd() {
+	infoBox "Configuring MOTD ..." 3
+	rm /etc/motd.tail
+	ln -s /etc/motd.tail.$NEWNAME /etc/motd.tail
+	uname -snrvm > /var/run/motd
+	[ -f /etc/motd.tail ] && cat /etc/motd.tail >> /var/run/motd
+}
+
+setNetwork() {
+	infoBox "Configuring Network Interface ..." 3
+	sed -i "s/$OLDIP/$NEWIP/g" /etc/network/interfaces
+	/etc/init.d/networking restart
+}
+
+setSSHKeys() {
+	#infoBox "Generating New SSH Host Keys ..." 5
+	progressBar "$NAME v$VERSION" "Generating New SSH Host Keys" "Initializing ..." "Progress ..." 0.25
+	rm /etc/ssh/ssh_host_*
+	dpkg-reconfigure openssh-server
+
+	#infoBox "Generating new root SSH Keys ..." 5
+	progressBar "$NAME v$VERSION" "Generating New root SSH Keys" "Initializing ..." "Progress ..." 0.25	
+	rm -f /root/.ssh/id_*
+	rm -f /root/.ssh/known_hosts
+	ssh-keygen -t rsa
+	ssh-keygen -t dsa
+}
+
+setXen() {
+	echo -e "Configuring Xen guest ..."
+
+	# Prevent the famous clocksource/0: Time went backwards error.
+	# @see http://www.hanckmann.net/?q=node/29
+	echo "xen.independent_wallclock = 1" >> /etc/sysctl.conf
+	
+	apt-get install -y ntp
+
+	sysctl -p
+	echo "jiffies"> /sys/devices/system/clocksource/clocksource0/current_clocksource	
+}
+
+configureClone() {
+	infoBox "Configuring VM Clone to: $FQNAME ..."
+	setHostname
+	setMotd
+	setNetwork
+	setSSHKeys
+	setXen
+	confirmDialog "VM Clone Configuration Complete! \n\nYou must reboot for your new configuration to take effect.\n\nWould you like to reboot now?"
+	reboot
+}
+
+# die [goodbye_message]
+die() {
+   echo -e $@
+   exit 1
+}
+
+# checkArg [argument_name, value]
+checkArg() {
+        if test -z "$2"; then
+                die "Missing Argument: $1!\n"
+        fi
+}
+
+bailDom() {
+        if [ "$(hostname -s)" == "$DOM0" ]; then
+                echo -e "\n$NAME Error: Cannot execute on dom0: '$DOM0$DOM'!\n"
+		exit 1
+        fi
+}
+
+
+bailDom
+
+confirmDialog "XEN VM Clone Configurator" "This utility automates the process of reconfiguring system settings on a freshly cloned Xen Virtual Machine.\n\nWould you like to (re)configure your VM now?"
+
+selectSourceDialog
+selectDestDialog
+
+confirmDialog "Confirm Configuration" "Reconfigure this VM as '$NEWNAME$DOM' ($OLDNAME -> $NEWNAME)?\n\n Source: $OLDNAME ($OLDFQNAME @ $OLDIP)\nDestination: $NEWNAME ($FQNAME @ $NEWIP)"
+
+configureClone
+
+exit 0

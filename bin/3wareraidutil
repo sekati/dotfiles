@@ -1,0 +1,31 @@
+#!/bin/sh
+# Sekati: 3Ware TWCLI Raid Utility
+# @author jason m horwitz | sekati.com
+# Copyright (C) 2010 jason m horwitz, Sekat LLC. All Rights Reserved.
+
+NAME="3WareRaidUtil"
+VERSION="1.0.0"
+DEFAULT_CONTROLLER=2
+DEFAULT_UNIT=0
+DIV="\n=============================================================================="
+MODEL=`tw_cli info c$DEFAULT_CONTROLLER model | awk '{ print $4 }'`
+CONTROLLER="/c$DEFAULT_CONTROLLER"
+UNIT="/u$DEFAULT_UNIT"
+CU="$CONTROLLER$UNIT"
+UNUSED_PORTS=`tw_cli info c$DEFAULT_CONTROLLER | grep "NOT-PRESENT" | wc -l`
+USED_PORTS=`tw_cli info c$DEFAULT_CONTROLLER | grep -v "NOT-PRESENT" | grep -v "RAID" | grep u$DEFAULT_UNIT | wc -l`
+
+echo "$DIV\n$NAME v$VERSION | Model: $MODEL | Unit: /c$DEFAULT_CONTROLLER/u$DEFAULT_UNIT | Used: $USED_PORTS | Unused: $UNUSED_PORTS $DIV"
+tw_cli info
+
+echo "$DIV\nCONTROLLER$DIV"
+tw_cli info c$DEFAULT_CONTROLLER | grep -v "NOT-PRESENT"
+
+echo "$DIV\nUNIT$DIV"
+tw_cli info c$DEFAULT_CONTROLLER u$DEFAULT_UNIT
+
+echo "$DIV\nSTATUS$DIV\n"
+tw_cli info c$DEFAULT_CONTROLLER allunitstatus
+tw_cli info c$DEFAULT_CONTROLLER u$DEFAULT_UNIT status
+
+exit 0

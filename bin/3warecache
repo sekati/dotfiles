@@ -1,0 +1,54 @@
+#!/bin/sh
+#
+# I've made a little startup script to call the tw_cli program to turn on write cache for the controller with 
+# each reboot, and give me some simple status. I've saved it as /etc/init.d/3warecache, and enabled the 
+# 'standard' way with 'update-rc.d 3warecache defaults.' You will want to find your proper controller and unit, 
+# as shown in the example below:
+#
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+CMD=/usr/sbin/tw_cli
+#Insert your controller and proper array below.
+#You can find this with tw_cli.
+CONTROLLER=/c0
+UNIT=u0
+
+case "$1" in
+  start)
+    echo -n 'Turning on RAID write cache...'
+    $CMD "$CONTROLLER/$UNIT set cache=on" >> /dev/null
+    if [ $? -ne 0 ] ; then
+      echo "failed."
+      exit 1
+    else
+      echo "OK."
+    fi
+  ;;
+  stop)
+    echo -n 'Turning off RAID write cache...'
+    $CMD "$CONTROLLER/$UNIT set cache=off" >> /dev/null
+    if [ $? -ne 0 ] ; then
+      echo "failed."
+      exit 1
+    else
+      echo "OK."
+    fi
+  ;;
+  restart|force-reload)
+    $0 stop
+    $0 start
+  ;;
+  diskstatus)
+    echo "Disk Status"
+    echo "-----------"
+    #Ick, this should be done better, but I'm lazy
+    $CMD "$CONTROLLER/$UNIT show" | awk "/$UNIT-/" | awk '{ print $1"\t"$3}'
+  ;;
+  status)
+    $CMD "$CONTROLLER show"
+  ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|diskstatus|status}" >&2
+    exit 1
+  ;;
+esac
+exit 0

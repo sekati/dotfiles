@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/usr/sbin/ntpdate-debian
+/sbin/hwclock --adjust
+/sbin/hwclock --systohc

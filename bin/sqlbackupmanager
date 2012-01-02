@@ -1,0 +1,121 @@
+#!/bin/bash
+# Sekati: MySQL Backup DB
+# @author jason m horwitz | sekati.com
+# Copyright (C) 2011 jason m horwitz, Sekat LLC. All Rights Reserved.
+#
+# CHANGELOG
+
+NAME="SQLBackupManager"
+VERSION="1.0.2"
+DEL="******************************************************"
+CURDATE=`date +%Y%m%d`
+
+
+############################################################
+# Configure DB's & Servers Here
+
+DBHOST="localhost"
+DBUSER="root"
+DBPASS="MYSQLROOTPASS""
+
+# backup directories
+BKROOT="/var/backups/mysql/"
+DAILY="daily/"
+WEEKLY="weekly/"
+MONTHLY="monthly/"
+SNAPSHOT="snapshots/"
+
+# bin utils
+MYSQL="$(which mysql)"
+MYSQLDUMP="$(which mysqldump)"
+GREP="$(which grep)"
+TR="$(which tr)"
+LS="$(which ls)"
+DU="$(which du)"
+
+# list the db's to be backed up here:
+# automatically collect all databases for backup (show databases, replace new line with space)
+DATABASES=(`$MYSQL -u $DBUSER -h $DBHOST -p$DBPASS -Bse 'show databases' | $GREP -v 'information_schema' | $TR '\n' ' '`)
+
+############################################################
+
+
+
+printHeader() {
+        echo -e "\n$DEL\n$NAME v$VERSION\n$DEL\n"
+}
+
+printUsage() {
+        echo -e "Usage: $0 { daily | weekly | monthly | snapshot | list }\n" 
+}
+
+# die [goodbye_message]
+die() {
+        echo -e $@
+        exit 1
+}
+
+backupDB() {
+	for i in "${DATABASES[@]}"
+	do
+	  	:
+		# do whatever on $i
+		rm ${BKPATH}${i}-*
+		$MYSQLDUMP -q -e -h $DBHOST -u $DBUSER -p${DBPASS} $i | gzip - > ${BKPATH}${i}-${CURDATE}.sql.gz
+		echo -e "Backing up SQL database: $i ..."
+	done
+}
+
+printHeader
+
+
+case $1 in
+
+        daily)
+	BKPATH=$BKROOT$DAILY
+        echo -e "Backing Up Databases to $BKPATH ...\n"
+	backupDB
+        ;;
+
+        weekly)
+	BKPATH=$BKROOT$WEEKLY
+	echo -e "Backing Up Databases to $BKPATH ...\n"
+	backupDB
+        ;;
+
+        monthly)
+	BKPATH=$BKROOT$MONTHLY
+	echo -e "Backing Up Databases to $BKPATH ...\n"
+	backupDB
+        ;;
+
+        snapshot|snapshots)
+	BKPATH=$BKROOT$SNAPSHOT
+	echo -e "Backing Up Databases to $BKPATH ...\n"
+        backupDB
+	;;
+
+	list|show)
+	echo -e "Listing current backups in $BKROOT ...\n"
+	$DU -h $BKROOT | $GREP -v 'cron'
+
+	echo -e "\nDAILY: $BKROOT$DAILY"
+	$LS -sh --color $BKROOT$DAILY
+
+        echo -e "\nWEEKLY: $BKROOT$WEEKLY"
+        $LS -sh --color $BKROOT$WEEKLY
+
+        echo -e "\nMONTHLY: $BKROOT$MONTHLY"
+        $LS -sh --color $BKROOT$MONTHLY
+
+        echo -e "\nSNAPSHOTS: $BKROOT$SNAPSHOT"
+        $LS -sh --color $BKROOT$SNAPSHOT
+	;;
+
+        *|?)
+        printUsage
+        exit 1
+        ;;
+esac
+
+exit 0

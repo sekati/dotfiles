@@ -1,0 +1,165 @@
+#!/bin/sh
+# Sekati: Apt Manager
+# @author jason m horwitz | sekati.com
+# Copyright (C) 2010 jason m horwitz, Sekat LLC. All Rights Reserved.
+#
+# CHANGELOG
+# 1.2.0 - now compatible with Bash4
+# 1.2.2 - adding maintenance
+
+NAME="AptManager"
+VERSION="1.2.3"
+DEL="******************************************************"
+
+printHeader() {
+	echo "\n$DEL\n$NAME v$VERSION\n$DEL\n"
+}
+
+printUsage() {
+	echo "Usage: $0 { \n\tupdate | upgrade | [maint|maintenance]  | dselect-upgrade | dist-upgrade \n\tsetup | [find|search] | install | reinstall \n\t[remove,uninstall] | autoremove | clean | autoclean \n\trepair | reconfigure | [list|installed] | show | showpkg | depends |status \n\t} package_name\n"
+}
+
+# die [goodbye_message]
+die() {
+	echo $@
+	exit 1
+}
+
+# confirm [question]
+confirm() {
+	read -p "$1 (y/n) "
+	[ "$REPLY" == y ] || die "\n$NAME Exiting..."
+}
+
+# checkArg [argument_name, value]
+checkArg() {
+        if test -z "$2"; then
+                die "Missing Argument: $1!\n"
+        fi
+}
+
+
+printHeader
+
+
+case $1 in
+	update)
+	echo "Updating Package Database ...\n"
+	apt-get update
+	;;
+
+	upgrade)
+	echo "Upgrading All Installed Packages ...\n"
+	apt-get -u upgrade
+	;;
+
+	maint|maintenance)
+	echo "Updating, Upgrading & Cleaning ...\n"
+	apt-get update
+	apt-get -u upgrade
+	apt-get autoclean
+	apt-get autoremove
+	;;
+
+	dselect-upgrade)
+	echo "Upgrading All Installed Packages with DSelect ...\n"
+	apt-get -u dselect-upgrade
+	;;
+	
+	dist-upgrade)
+	echo "Upgrading Distribution Packages ...\n"
+	apt-get -u dist-upgrade
+	;;
+
+	setup)
+	echo "Setup: Changing list of apt mirrors ...\n"
+	apt-setup
+	;;
+	
+	search|find)
+	checkArg "Package Name" $2
+	echo "Searching for package: $2 ...\n"
+	apt-cache search $2
+	;;
+
+	install)
+	checkArg "Package Name" $2
+	echo "Attempting to install package: $2 ...\n"
+	apt-get install $2
+	;;
+
+	reinstall)
+	checkArg "Package Name" $2
+	echo "Attempting to Reinstall package: $2 ...\n"
+	apt-get --reinstall install $2
+	;;
+
+	remove|uninstall)
+	checkArg "Package Name" $2
+	echo "Attempting to Remove & Purge Package: $2 ...\n"
+	apt-get --purge remove $2
+	;;
+
+	autoremove)
+	echo "Auto-Removing Unused Packages ...\n"
+	apt-get autoremove
+	;;
+
+	clean)
+	echo "Cleaning ...\n"
+	apt-get clean
+	;;
+
+	autoclean)
+	echo "Auto-Cleaning ...\n"
+	apt-get autoclean
+	;;
+
+	repair|fix)
+	confirm "Are you sure you want to attempt to fix/repair the apt package error?\nThis will run the commands: `apt-get -f install && dpkg --configure -a`"
+	apt-get -f install
+	dpkg --configure -a
+	;;
+
+	reconfigure)
+	checkArg "Package Name" $2
+	confirm "Are you sure you want to reconfigure $2?"
+	dpkg --reconfigure $2
+	;;
+
+	list|installed)
+	echo "Listing Installed & Removed Packages ...\n"
+	dpkg -l
+	;;
+
+	show)
+	checkArg "Package Name" $2
+	echo "Showing Package Info ...\n"
+	apt-cache show $2
+	;;
+
+	showpkg)
+	checkArg "Package Name" $2
+	echo "Showing Package ...\n"
+	apt-cache showpkg $2
+	;;
+	
+	depends)
+	checkArg "Package Name" $2
+	echo "Showing Package Dependencies ...\n"
+	apt-cache depends $2
+	;;
+
+	status)
+	checkArg "Package Name" $2
+	echo "Showing package status: $2 ...\n"
+	dpkg -l $2
+	;;
+
+	*|?)
+	printUsage
+	exit 1	
+	;;
+esac
+
+exit 0

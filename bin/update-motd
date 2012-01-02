@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo -e "Updating System MOTD ..."
+
+uname -snrvm > /var/run/motd
+[ -f /etc/motd.tail ] && cat /etc/motd.tail >> /var/run/motd

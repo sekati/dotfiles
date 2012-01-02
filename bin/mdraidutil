@@ -1,0 +1,49 @@
+#!/bin/sh
+# Sekati: MDADM Raid Utility
+# @author jason m horwitz | sekati.com
+# Copyright (C) 2010 jason m horwitz, Sekat LLC. All Rights Reserved.
+
+NAME="MDRaidUtil"
+VERSION="1.0.0"
+
+case $1 in
+	query)
+	if test -z "$2"
+	then
+		echo "Missing {array_num} argument!"
+	else
+		echo "MDADM Details for Raid Array #: /dev/md$2 ..."
+		mdadm -Q --detail /dev/md$2
+	fi
+	;;
+
+	proc)
+	echo "MDADM Status: /proc/mdstat ..."
+	cat /proc/mdstat
+	;;
+
+	status)
+	echo -e "MDADM RAID Array Status for Arrays ...\n"
+	DEVS=`mdadm -Q --detail /dev/md[0-2] | grep "/dev/md" | sed 's/\/dev\///' | sed 's/://' | tr '\n', '\t'`
+	SIZES=`mdadm -Q --detail /dev/md[0-2] | grep "Array Size : " | awk '{ print $5,$6 }' | sed 's/(//' | sed 's/ //' | tr '\n', '\t'`
+	LEVELS=`mdadm -Q --detail /dev/md[0-2] | grep "Raid Level : " | awk '{ print $4 }' | tr '\n', '\t'`
+	WORKING=`mdadm -Q --detail /dev/md[0-2] | grep "Working Devices : " | awk '{ print $4 }' | tr '\n', '\t'`
+	FAILED=`mdadm -Q --detail /dev/md[0-2] | grep "Failed Devices : " | awk '{ print $4 }' | tr '\n', '\t'`
+	STATES=`mdadm -Q --detail /dev/md[0-2] | grep "State : " | awk '{ print $3 }' | tr '\n' '\t'`
+	#T='\t\t'
+	printf "%-20s%-20s%-20s%-20s\n" "Devices:" $DEVS
+	printf "%-20s%-20s%-20s%-20s\n" "Array Size:" $SIZES
+	printf "%-20s%-20s%-20s%-20s\n" "Levels:" $LEVELS
+	printf "%-20s%-20s%-20s%-20s\n" "Working:" $WORKING
+	printf "%-20s%-20s%-20s%-20s\n" "Failed:" $FAILED
+	printf "%-20s%-20s%-20s%-20s\n" "States:" $STATES
+	echo -e "\n"
+	;;
+
+	*)
+	echo "Usage: $0 {query|proc|status} {array id}"
+	exit 1
+	;;
+esac
+
+exit 0

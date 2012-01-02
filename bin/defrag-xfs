@@ -1,0 +1,16 @@
+#!/bin/sh
+# Sekati: LAMP Stack Installer
+# @author jason m horwitz | sekati.com
+# Copyright (C) 2010 jason m horwitz, Sekat LLC. All Rights Reserved.
+
+NAME="XFS Defrag"
+VERSION="1.0.0"
+TARGET="/dev/sda1"
+
+echo "$NAME v$VERSION ... initializing ..."
+sleep 1
+
+echo "Live XFS Defragmentation on parition: $TARGET ..."
+xfs_fsr -vvv $TARGET
+
+exit 0

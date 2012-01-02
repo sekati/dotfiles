@@ -1,0 +1,511 @@
+#!/bin/sh
+# Sekati: XEN VM Manager
+# @author jason m horwitz | sekati.com
+# Copyright (C) 2010 jason m horwitz, Sekat LLC. All Rights Reserved.
+#
+# CHANGELOG
+# 1.5.3 - now compatible with Bash4
+# 1.5.4 - cleaned up echo issues & usage
+# 1.5.5 - added default role
+# 1.5.8 - added conf viewers and dist support
+# 1.6.0 - argument cleanup
+# 1.6.2 - added cpu-credit-set
+NAME="VMManager"
+VERSION="1.6.4"
+
+DEL="******************************************************"
+XENHOME=/home/xen/domains
+XENCONF=/etc/xen
+XENLOG=/var/log/xen
+XENTOOLLOG=/var/log/xen-tools
+DEFAULT_SIZE="100Gb"
+DEFAULT_RAM="2Gb"
+DEFAULT_MAXMEM="4096"
+DEFAULT_SWAP="4Gb"
+DEFAULT_ROLE="sekati,udev"
+DEFAULT_IP="auto"
+DEFAULT_ARCH="amd64"
+DEFAULT_DIST="squeeze"
+DEFAULT_FS="xfs"
+
+printHeader() {
+	echo "\n$DEL\n$NAME v$VERSION\n$DEL\n";
+}
+
+printUsage() {
+	echo "Usage: $0 { \
+	\n\t create | clone | destroy | delete | list | autostart | rm-autostart | list-autostart \
+	\n\t boot | boot-console | console | halt,shutdown | reboot \
+	\n\t pause | suspend | resume | save | restore \
+	\n\t vcpu | [cpu|cpu-credit] | cpu-credit-dom0 | cpu-credit-set \
+	\n\t mem-set | maxmem-set \
+	\n\t vmid | vmconf | xenconf | xentoolsconf \
+	\n\t ips | log | top | iptables | gen-mac | help | usage \
+	\n\t} { hostname, ip_addr, size=$DEFAULT_SIZE, swap=$DEFAULT_SWAP, memory=$DEFAULT_RAM, max_memory=$DEFAULT_MAXMEM, dist=$DEFAULT_DIST, arch=$DEFAULT_ARCH, role=$DEFAULT_ROLE, fs=$DEFAULT_FS }"
+}
+
+# die [goodbye_message]
+die() {
+   echo $@
+   exit 1
+}
+
+# confirm [question]
+confirm() {
+	#read -p "$1 (y/n) "
+	#[ "$REPLY"=="y" ] || die "\n$NAME Exiting..."
+	while true
+	do
+	echo -n "$1 (y/n) "
+	read REPLY
+	#if "$REPLY" -eq "n"; then
+	#die "\n$NAME Exiting..."
+	#else 
+	#break
+	#fi
+	case $REPLY in
+	y|Y|YES|yes|Yes) break ;;
+	n|N|no|NO|No) die "\n$NAME Exiting..." ;;
+	*) echo "Please enter \"y\" or \"n\" ..." ;;
+	esac
+	done
+	#echo "You entered \"$REPLY\". Continuing ...\n"
+}
+
+# checkArg [argument_name, value]
+checkArg() {
+	if test -z "$2"; then
+                die "Missing Argument: $1!\n"
+        fi
+}
+
+# setHostname [hostname]
+setHostname() {
+	if test -z "$1"; then
+    		die "Missing Argument: VM Hostname!\n"
+	else
+		HOSTNAME=$1
+	fi
+}
+
+# setConf [hostname]
+setConf() {
+	setHostname $1
+	if [ -f $XENCONF/$HOSTNAME.cfg ]; then
+		CONF=$XENCONF/$HOSTNAME.cfg
+	else
+		die "Error: VM Configuration Not Found"
+	fi
+}
+
+# getVmId [hostname]
+getVmId() {
+	setConf $1
+	VMID=`xm list | grep $HOSTNAME | awk '{ print $2 }'`
+	echo "$HOSTNAME VM ID: $VMID\n"
+}
+
+# setMaxMem [hostname, maxmem]
+setMaxMemConf() {
+	setConf $1
+	checkArg "MAXMEM" $2
+	NEWMAXMEM="maxmem = '$2'"
+	# xm mem-max $1 $2
+	CONFTEST=`grep maxme $CONF | wc -l`
+	if [ "$CONFTEST" == "0" ]; then
+        	echo "Adding new 'maxmem' setting of $2 to $CONF ...\n"
+		echo $NEWMAXMEM >> $CONF
+	else
+		echo "Changing 'maxmem' setting in $CONF to $2 ...\n"
+		NEWMAXMEM=" = '$2'"
+		sed -i "s/\(^maxmem\)\(..*$\)/\1${NEWMAXMEM}/" $CONF
+	fi
+	echo "\n$DEL\n* WARNING: You must reboot the VM $HOSTNAME\n instance to enable the new 'maxmem' setting!\n$DEL\n"
+}
+
+genXENMac() {
+	S="00:16:3e:"
+	E=`(date; cat /proc/interrupts) | md5sum | sed -r 's/^(.{6}).*$/\1/; s/([0-9a-f]{2})/\1:/g; s/:$//;'`
+	echo $S$E
+}
+
+# cloneImage [src_hostname, dest_hostname, ip_addr]
+cloneImage() {
+	checkArg "Source Hostname" $1
+	checkArg "Dest Hostname" $2
+	checkArg "Dest IP Address" $3
+	SRC=$1
+	DEST=$2
+	DESTIP=$3
+	confirm "Are you sure want to clone VM: $1 -> $2 @ $3?"
+	echo "$DEL\nVM Clone Initialized ...\n"
+	echo "Shutting Down Source VM: $SRC ..."
+	xm shutdown $SRC
+	echo "Sleeping for 30 seconds to let VM shutdown ..."
+	sleep 30
+	echo "... Resuming Clone Operation ..."
+	xm list
+	sleep 15
+
+	echo "\n$DEL\nCreating VM Target Destination: $DEST ..."
+	mkdir $XENHOME/$DEST
+
+	echo "\n$DEL\nCloning Configuration: $SRC.cfg -> $DEST.cfg ...\n"
+	cp -p $XENCONF/$SRC.cfg $XENCONF/$DEST.cfg
+
+	echo "$DEST.cfg Adjusting Configuration ..."
+
+	# replace hostnames
+	echo "Configuring VM Hostname: $DEST ..."
+	sed -i "s/$SRC/$DEST/g" $XENCONF/$DEST.cfg
+
+	# replace ipaddr
+	echo "Configuring VM IP Address $DESTIP ..."
+	sed -i "s/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/$DESTIP/g" $XENCONF/$DEST.cfg
+
+	# replace mac address
+	RANDMAC=`genXENMac`
+	echo "Configuring Random MAC Address $RANDMAC ..."
+	sed -i "s/\([0-9A-Z][0-9A-Z]:\)\{5\}[0-9A-Z][0-9A-Z]/$RANDMAC/g" $XENCONF/$DEST.cfg
+
+	# clone disks
+        echo "\n$DEL\nCloning Disk: $SRC/disk.img -> $DEST/disk.img ...\n"
+        dd if=$XENHOME/$SRC/disk.img of=$XENHOME/$DEST/disk.img bs=4k
+
+        echo "\n$DEL\nCloning Swap: $SRC/swap.img -> $DEST/swap.img ...\n"
+        dd if=$XENHOME/$SRC/swap.img of=$XENHOME/$DEST/swap.img bs=4k
+
+	# success
+	echo "\n$DEL\nVM Clone $SRC -> $DEST Completed Successfully!\n$DEL\n"
+	echo "Be sure to edit:\n\t* /etc/hosts\n\t* /etc/hostname\n\t* /etc/network/interfaces\n"
+
+	echo "\n$DEL\nRestarting VM Clone Source: $SRC ...\n"
+	xm create $XENCONF/$SRC.cfg
+
+	# boot it up?
+	confirm "Would you like to Boot your new VM & connect to it's Console?"
+	xm create $XENCONF/$DEST.cfg
+	xm console $DEST
+}
+
+
+printHeader
+
+
+case $1 in
+	clone)
+	echo "XEN VM Cloner: Initializing Argument ...\n"
+	cloneImage $2 $3 $4
+	;;
+
+	create)
+	echo "XEN VM Creator: Initializing Argument ...\n"
+	setHostname $2
+	# ip address
+	if test -z "$3"; then
+		die "Missing Argument: IP Address (try $DEFAULT_IP)"
+	else
+		IP=$3
+	fi
+	# size
+	if test -z "$4"; then
+        	echo "Missing Argument: VM Size (Default: $DEFAULT_SIZE)"
+        	SIZE=$DEFAULT_SIZE
+	else
+        	SIZE=$4
+	fi
+	# swap
+	if test -z "$5"; then
+        	echo "Missing Argument: VM Swap (Default: $DEFAULT_SWAP)"
+        	SWAP=$DEFAULT_SWAP
+	else
+        	SWAP=$5
+	fi
+	# memory
+	if test -z "$6"; then
+        	echo "Missing Argument: VM Memory (Default: $DEFAULT_RAM)"
+        	RAM=$DEFAULT_RAM
+	else
+        	RAM=$6
+	fi
+	# max memory
+	if test -z "$7"; then
+        	echo "Missing Argument: VM Max Memory (Default: $DEFAULT_MAXMEM)"
+        	MAXMEMORY=$DEFAULT_MAXMEM
+	else
+        	MAXMEMORY=$7
+	fi
+	# dist
+	if test -z "$8"; then
+                echo "Missing Argument: VM Distribution (Default: $DEFAULT_DIST)"
+                DIST=$DEFAULT_DIST
+        else
+                DIST=$8
+        fi
+	# arch
+        if test -z "$9"; then
+                echo "Missing Argument: VM Architecture (Default: $DEFAULT_ARCH)"
+                ARCH=$DEFAULT_ARCH
+        else
+                ARCH=$9
+        fi
+	# role
+        if test -z "$10"; then
+                echo "Missing Argument: VM Role (Default: $DEFAULT_ROLE)"
+                ROLE=$DEFAULT_ROLE
+        else
+                ROLE=$10
+        fi
+	# fs
+        if test -z "$11"; then
+                echo "Missing Argument: VM Filesystem (Default: $DEFAULT_FS)"
+                FS=$DEFAULT_FS
+        else
+                FS=$11
+        fi
+
+	echo "\n$DEL\nVM Configuration\n$DEL\n"
+	printf "%-20s%-20s\n" "Hostname:" $HOSTNAME
+        printf "%-20s%-20s\n" "Ip Address:" $IP
+        printf "%-20s%-20s\n" "Size:" $SIZE
+        printf "%-20s%-20s\n" "Swap:" $SWAP
+        printf "%-20s%-20s\n" "Memory:" $RAM
+	printf "%-20s%-20s\n" "Max Memory:" $MAXMEMORY
+	printf "%-20s%-20s\n" "Distribution:" $DIST
+	printf "%-20s%-20s\n" "Architecture:" $ARCH
+	printf "%-20s%-20s\n" "Role:" $ROLE
+        printf "%-20s%-20s\n" "Filesystem:" $FS
+	echo "\n$DEL\n"
+
+	echo "\n 'xen-create-image --hostname=$HOSTNAME --size=$SIZE --swap=$SWAP --ip=$IP --memory=$RAM --dist=$DIST --arch=$ARCH --role=$ROLE --fs=$FS' \n\n"
+	confirm "Are you sure you want to Create $2 VM?"
+	xen-create-image --hostname=$HOSTNAME --size=$SIZE --swap=$SWAP --ip=$IP --memory=$RAM --dist=$DIST --arch=$ARCH --role=$ROLE --fs=$FS
+	#setMaxMemConf $HOSTNAME $MAXMEMORY
+	;;
+
+	destroy)
+	confirm "Are you sure you want to Destroy $2 VM?"
+	setHostname $2
+	echo "Destroying VM: $HOSTNAME ...\n"
+	xm destroy $HOSTNAME
+    ;;
+
+	delete)
+	confirm "Are you sure you want to Permanently Delete $2 VM?"
+	setConf $2
+	echo "Deleting VM: $HOSTNAME ...\n"
+	xen-delete-image /home/xen/domains/$HOSTNAME $HOSTNAME
+	xm destroy $HOSTNAME
+	xm delete $HOSTNAME
+	# cfg
+	echo "\tRemoving VM Config: $HOSTNAME ...\n"
+	rm $CONF
+	# auto
+	if [ -f $XENCONF/auto/$HOSTNAME.cfg ]; then
+		echo "\tRemoving Autostart for VM: $HOSTNAME"
+		rm -f $XENCONF/auto/$HOSTNAME.cfg
+	fi
+	# log
+	if [ -f $XENTOOLLOG/$HOSTNAME.log ]; then
+		echo "\tRemoving VM Log: $HOSTNAME ...\n"
+		rm $XENTOOLLOG/$HOSTNAME*.log
+	fi
+	# vm image dir
+	if [ -f $XENHOME/$HOSTNAME/disk.img ]; then
+                echo "\tRemoving VM Image: $HOSTNAME ...\n"
+                rm -rf $XENHOME/$HOSTNAME/
+        fi
+	;;
+
+	list|info|show)
+	echo "RUNNING VM's:\n$DEL\n"
+	xm list
+	echo "\n\nAVAILIBLE VM IMAGES:\n$DEL\n"
+	xen-list-images
+	echo "\n$DEL\n"
+	;;
+
+	vcpu)
+	echo "VCPU List ...\n"
+	xm vcpu-list
+	;;
+
+	cpu|cpu-credit)
+	echo "CPU Credit Schedule ...\n"
+	xm sched-credit
+	;;
+
+	cpu-credit-dom0)
+	echo "Setting Domain-0 CPU Credit 2x DomU (512) ..."
+	xm sched-credit -d Domain-0 -w 512
+	;;
+
+	cpu-credit-set)
+	setConf $2
+	checkArg "WEIGHT" $3
+	echo "Setting VM CPU Credit for: $HOSTNAME to: $3 ..."
+	xm sched-credit -d $HOSTNAME -w $3
+	xm sched-credit
+	;;
+
+	boot)
+	setConf $2
+	echo "Booting VM: $HOSTNAME ...\n"
+	xm create $CONF
+	;;
+
+	boot-console|bootc)
+	setConf $2
+	echo "Booting VM: $HOSTNAME & Attaching Console ...\n"
+	xm create -c $CONF
+	;;
+
+	halt|shutdown)
+	confirm "Are you sure you want to Shutdown $2 VM?"
+	setHostname $2
+	echo "Shutting Down VM: $HOSTNAME ...\n"
+	xm shutdown $HOSTNAME
+	;;
+
+	reboot)
+	confirm "Are you sure you want to Reboot $2 VM?"
+	setHostname $2
+	echo "Restarting VM: $HOSTNAME ...\n"
+	xm reboot $HOSTNAME
+	;;
+
+	suspend)
+	confirm "Are you sure you want to Suspend $2 VM?"
+	setHostname $2
+	echo "Suspending VM (removed from memory & written to disk): $HOSTNAME ...\n"
+	xm suspend $HOSTNAME
+	;;
+
+	pause)
+	confirm "Are you sure you want to Pause $2 VM?"
+	setHostname $2
+	echo "Pausing VM: $HOSTNAME ...\n"
+	xm pause $HOSTNAME
+	;;
+
+	resume)
+	confirm "Are you sure you want to Resume $2 VM?"
+	setHostname $2
+	echo "Resuming VM Console: $HOSTNAME ...\n"
+	xm resume $HOSTNAME
+	;;
+
+	save)
+	confirm "Are you sure you want to Save $2 VM?"
+	setHostname $2
+	checkArg "VMSAVENAME" $3
+	xm save $HOSTNAME /tmp/$3
+	;;
+
+	restore)
+	confirm "Are you sure you want to Restore $2 VM?"
+	checkArg "VMSAVENAME" $2
+	xm restore /tmp/$2
+	;;
+
+	console)
+	setHostname $2
+	echo "Connecting to VM Console: $HOSTNAME ...\n"
+	echo "(Control+] to Exit)\n"
+	xm console $HOSTNAME
+	;;
+
+	autostart|auto|add-auto|add-autostart)
+	confirm "Are you sure you want to Autostart $2 VM?"
+	setConf $2
+	echo "Adding Autostart for VM: $CONF"
+	ln -s $CONF $XENCONF/auto/
+	;;
+
+	rm-autostart)
+	confirm "Are you sure you want to Remove the Autostart for $2 VM?"
+	setConf $2
+	echo "Removing Autostart for VM: $CONF"
+	rm -f $XENCONF/auto/$HOSTNAME.cfg
+	;;
+
+	list-autostart|list-auto|listauto)
+	echo "VM's scheduled to auto-start @ dom0 boot:\n"
+	ls -al $XENCONF/auto/
+	;;
+
+	vmid)
+	getVmId	$2
+	;;
+
+	vmconf|view)
+	setConf $2
+	echo "Viewing VM Configuration for: $HOSTNAME ...\n"
+	less $CONF
+	;;
+
+	xenconf)
+	echo "Viewing xend-config.sxp ...\n"
+	grep '^(' /etc/xen/xend-config.sxp
+	
+	echo "\nViewing xend-config.dist (for reference) ...\n"
+	grep '^(' /etc/xen/xend-config.dist
+	;;
+
+	xentoolsconf)
+	echo "Viewing xen-tools.conf ...\n"
+	grep -vE "^\#|^$" /etc/xen-tools/xen-tools.conf | less 
+	;;
+
+	mem-set)
+	confirm "Are you sure you want to Set the Memory Limit to $3 on $2 VM?"
+	setConf $2
+	checkArg "VMRAM" $3
+	echo "Setting Memory limit for VM $HOSTNAME to $3Mb ...\n"
+	echo "* If you receive an error please check the VM cfg and insure maxmem='X' is set properly.\n"
+	xm mem-set $HOSTNAME $3
+	;;
+
+	maxmem-set)
+	confirm "Are you sure you want to Set the Maximum Memory Limit to $3 on $2 VM?"
+        setConf $2
+        checkArg "MAXMEM" $3
+	setMaxMemConf $2 $3
+	;;
+
+	gen-mac)
+	echo "Generating random XEN safe MAC Address ...\n"
+	genXENMac
+	;;
+
+	ips|ip)
+	echo "Listing Available IP Addresses ...\n"
+	cat /etc/xen-tools/ips.txt
+	;;
+
+	log)
+	echo "Tailing XEN Logfiles ...\n"
+	tail -f $XENLOG/*.log $XENTOOLLOG/*.log
+	;;
+
+	top)
+	echo "XEN Top ...\n"
+	xentop
+	;;
+
+	iptables)
+	echo "IP Tables Virtual Interfaces ...\n"
+	iptables -L
+	;;
+
+	help)
+	xm help
+	;;
+
+	*)
+	printUsage
+	exit 1
+	;;
+esac
+
+exit 0

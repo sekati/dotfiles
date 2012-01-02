@@ -1,0 +1,21 @@
+#!/bin/sh
+# Sekati: VM Toolchain Installer
+# @author jason m horwitz | sekati.com
+# Copyright (C) 2010 jason m horwitz, Sekat LLC. All Rights Reserved.
+
+NAME="VMToolchainInstaller"
+VERSION="1.0.0"
+
+# MAIN
+
+echo "$NAME v$VERSION ... initializing ..."
+sleep 1
+
+echo "... installing basic toolchain for virtualmachines ..."
+
+apt-get update
+apt-get -u upgrade
+apt-get -y install htop iptraf less wget sudo byobu ntpdate dnsutils pssh dialog udev locate
+
+echo "Toolchain Installed Successfully ... Goodbye!"
+exit 0
