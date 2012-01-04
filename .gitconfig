@@ -31,6 +31,7 @@
         rvmaster = push origin HEAD:refs/for/master
         conf = config --global -l
 	unadd = reset HEAD 
+ 	push-tags =  push origin master --tags
 
 [color]
         diff = auto
