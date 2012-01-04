@@ -30,6 +30,7 @@
         h = log --format="%h %ad | %s%d [%an]" --graph --date=short
         rvmaster = push origin HEAD:refs/for/master
         conf = config --global -l
+	unadd = reset HEAD 
 
 [color]
         diff = auto
