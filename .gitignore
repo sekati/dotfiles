@@ -34,8 +34,8 @@ tmtags
 
 # Flex / Eclipse
 # ----------------------------------------------------------------------------------------------
-bin/
-bin-debug/
+#bin/
+#bin-debug/
 .project
 .settings/
 .actionScriptProperties

@@ -153,6 +153,7 @@
 	pl = pull 							# pull
 	
 	
+	
 	# PUSH
 	ps = push							# push
 	push-tags = push origin master --tags
@@ -172,6 +173,7 @@
 	
 	
 	# RESET
+	reset --soft HEAD^					# undo your last commit, but don't throw away your changes
 	unadd = reset HEAD
 	unstage = reset HEAD --				# remove files from index (tracking)
 	uncommit = reset --soft HEAD^ 		# go back before last commit, with files in uncommitted state

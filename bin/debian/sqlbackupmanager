@@ -2,24 +2,21 @@
 # Sekati: MySQL Backup DB
 # @author jason m horwitz | sekati.com
 # Copyright (C) 2011 jason m horwitz, Sekat LLC. All Rights Reserved.
-#
-# CHANGELOG
 
 NAME="SQLBackupManager"
-VERSION="1.0.2"
+VERSION="1.0.3"
 DEL="******************************************************"
 CURDATE=`date +%Y%m%d`
-
 
 ############################################################
 # Configure DB's & Servers Here
 
 DBHOST="localhost"
 DBUSER="root"
-DBPASS="MYSQLROOTPASS""
+DBPASS="MYSQLROOTPASS"
 
 # backup directories
-BKROOT="/var/backups/mysql/"
+BKROOT="/root/backups/"
 DAILY="daily/"
 WEEKLY="weekly/"
 MONTHLY="monthly/"
@@ -39,8 +36,6 @@ DATABASES=(`$MYSQL -u $DBUSER -h $DBHOST -p$DBPASS -Bse 'show databases' | $GREP
 
 ############################################################
 
-
-
 printHeader() {
         echo -e "\n$DEL\n$NAME v$VERSION\n$DEL\n"
 }
@@ -56,6 +51,7 @@ die() {
 }
 
 backupDB() {
+	echo -e "Backing Up Databases to $BKPATH ...\n"
 	for i in "${DATABASES[@]}"
 	do
 	  	:
@@ -68,30 +64,25 @@ backupDB() {
 
 printHeader
 
-
 case $1 in
 
         daily)
 	BKPATH=$BKROOT$DAILY
-        echo -e "Backing Up Databases to $BKPATH ...\n"
 	backupDB
         ;;
 
         weekly)
 	BKPATH=$BKROOT$WEEKLY
-	echo -e "Backing Up Databases to $BKPATH ...\n"
 	backupDB
         ;;
 
         monthly)
 	BKPATH=$BKROOT$MONTHLY
-	echo -e "Backing Up Databases to $BKPATH ...\n"
 	backupDB
         ;;
 
         snapshot|snapshots)
 	BKPATH=$BKROOT$SNAPSHOT
-	echo -e "Backing Up Databases to $BKPATH ...\n"
         backupDB
 	;;
 

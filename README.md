@@ -1,26 +1,37 @@
+Sekati Dotfiles
+============================
+              
+_These are my dotfiles; there are many like them, but these dotfiles are mine._ 
 
-# Sekati Dotfiles
+* Version: 0.0.7
+* Developer: Jason M Horwitz
+* Website: [http://sekati.com](http://sekati.com)
+* Copyright: (c) 2011-2012 Jason M Horwitz / Sekati LLC.
 
+## Overview
+
+This is my personal "best of ~" collection. The primary target are OS X users who
+love bash, git, ruby/rails, homebrew, vim, etc - &/or Debian/Ubuntu . 
+you spend a lot of time working on Debian/Ubuntu VPS's then you should be quite 
+pleased.  
+                                   
 ## Installation
 
-```
-git clone https://github.com/sekati/dotfiles.git && cd dotfiles && ./bootstrap.sh
-```
+*Warning:* _The Rakefile mentioned below is not yet ready for primetime but is FPO until I can complete the repo: please manually install dotfiles until this README changes: you have been warned._          
 
+- `git clone git://github.com/sekati/dotfiles ~/.dotfiles`
+- `cd ~/.dotfiles`
+- `rake install`
 
-## Update
-
-`cd` into your local `dotfiles` repository and then:
-
-```
-./bootstrap.sh
-```
+The ``install`` rake task 
+will symlink the appropriate files in `.dotfiles` to your home directory. Everything is 
+configured and tweaked within `~/.dotfiles`, though.
 
 
 License
 -------------------------------------
 
-Copyright © 2011 Jason M Horwitz / Sekati LLC. All Rights Reserved.
+Copyright © 2011-2012 Jason M Horwitz / Sekati LLC. All Rights Reserved.
 
 Released under the MIT License: [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php)
 
