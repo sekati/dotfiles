@@ -1,5 +1,3 @@
-# @see http://nuclearsquid.com/writings/git-tricks-tips-workflows/
-
 [user]
 	name = John Doe
 	email = jd@example.com
@@ -43,17 +41,23 @@
 	untracked = cyan
 
 [push]
+	# push the current branch to its upstream branch when no refspec given
 	default = tracking
-	#default=current
 
 [branch]
+	# When branching off a remote branch, automatically let the local branch track the remote branch
 	autosetupmerge = true
 
 [merge]
 	tool = opendiff
+	# show a diffstat at the end of a merge
+	stat = true
 
 [diff]
+	# do basic rename and copy detection
 	renames = copies
+	# Tell git diff to use mnemonic prefixes (i)ndex, (w)ork tree, (c)ommit, (o)bject - instead of the standard (a) and (b) notation
+	mnemonicprefix = true
 
 [format]
 	pretty="format:%Cred%ae %Creset- %C(yellow)%h %s %Creset(%ar)"
@@ -132,20 +136,14 @@
 
 	
 	# LOG
-	log = log --decorate --graph --date=short
-	l = log
-	lg = log -p
-	changes = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\" --name-status
-	short = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
-	changelog = log --pretty=format:\" * %s\"
-	shortnocolor = log --pretty=format:\"%h %cr %cn %s\"	
-	h = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-	hist = h
-	history = h
+	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	h = l
+	lg = log --format="%h %ad | %s%d [%an]" --graph --date=short
 	unpushed = log origin.. 			# show files committed but not yet pushed
 	ls = ls-files
 	last = log -1 HEAD					# show last log item
-	
+	who = shortlog -s --	
+
 	
 	# MERGE
 	fold = merge --no-ff 				# merge the branch, keeping its commits in their own branch
@@ -159,6 +157,7 @@
 	ps = push							# push
 	push-tags = push origin master --tags
  	mirror = push --mirror 				# mirror branches (including deletions) and tags
+	rvmaster = push origin HEAD:refs/for/master
 	
 	
 	# REBASE
@@ -173,11 +172,12 @@
 	
 	
 	# RESET
+	unadd = reset HEAD
 	unstage = reset HEAD --				# remove files from index (tracking)
 	uncommit = reset --soft HEAD^ 		# go back before last commit, with files in uncommitted state
 	filelog = log -u 					# show changes to a file
 	mt = mergetool 						# fire up the merge tool
-	goto = reset --hard					# put this branch at a particular ref		
+	goto = reset --hard					# put this branch at a particular ref
 	
 	
 	# STASH
@@ -189,12 +189,17 @@
   	
 	# STATUS
 	s = status 							# status
-	st = status 						# status
-	stat = status 						# status	  	
+	st = status -sb						# better status
+	stat = status 						# status
 	
 	
 	# TAG
+	tags = show
 	t = tag -n 							# show tags with <n> lines of each tag message
+	tag-release = !sh -c 'git tag release/`date +%Y/%m/%d/%H%M`' # tags a release with 'release/YYYY-MM-DD-HH-MM-SS'
+	label = tag -a 						# set a tag
+	add-tag = label						# add a tag with given name
+	rm-tag = tag -d						# delete tag with given name
 	
 	
 	# TRACK
@@ -205,38 +210,4 @@
 	svnr = svn rebase
 	svnd = svn dcommit
 	svnl = svn log --oneline --show-commit
-
-	
-		
-
-
-	# search through the log
-	axe = !sh -c 'git log -S"$0"'
-	
-
-
-	# pull changes, show commits since last pull/push
-	up = !sh -c 'git pull "$0" HEAD && git log --pretty=format:\"%Cred%ae %Creset- %C(yellow)%s %Creset(%ar)\" HEAD@{1}..'
-
-
-
-	# set a tag
-	label = tag -a
-	
-	# tags a release with 'release/YYYY-MM-DD-HH-MM-SS'
-	tag-release = !sh -c 'git tag release/`date +%Y/%m/%d/%H%M`'	
-	
-	
- 	
- 	
-
-	# better status
-	stat = status -sb
-  
-	who = shortlog -s --
-	l = log --graph --abbrev-commit --date=relative
-	h = log --format="%h %ad | %s%d [%an]" --graph --date=short
-	rvmaster = push origin HEAD:refs/for/master
-	
-	unadd = reset HEAD 
 	

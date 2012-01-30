@@ -81,6 +81,7 @@ app/config/database.php
 # ----------------------------------------------------------------------------------------------
 *.rbc
 *.sassc
+.bundle
 .sass-cache
 capybara-*.html
 .rspec
