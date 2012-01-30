@@ -1,1 +1,115 @@
+# Git Ignores @see https://github.com/github/gitignore
+# ----------------------------------------------------------------------------------------------
+
+
+# OSX
+# ----------------------------------------------------------------------------------------------
 .DS_Store
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+
+# Windows
+# ----------------------------------------------------------------------------------------------
+Thumbs.db
+
+
+# SVN + Mercurial
+# ----------------------------------------------------------------------------------------------
+.svn/
+/.hg/*
+*/.hg/*
+.hgignore
+
+
+# Textmate
+# ----------------------------------------------------------------------------------------------
+*.tmproj
+*.tmproject
+tmtags
+
+
+# Flex / Eclipse
+# ----------------------------------------------------------------------------------------------
+bin/
+bin-debug/
+.project
+.settings/
+.actionScriptProperties
+.flexProperties
+
+
+# CodeIgniter
+# ----------------------------------------------------------------------------------------------
+*/config/development
+*/logs/log-*.php
+*/logs/!index.html
+*/cache/*
+*/cache/!index.html
+
+
+# ExpressionEngine
+# ----------------------------------------------------------------------------------------------
+# Images
+images/avatars/
+images/captchas/
+images/smileys/
+images/member_photos/
+images/signature_attachments/
+images/pm_attachments/
+
+# Caches
+sized/
+thumbs/
+_thumbs/
+*/expressionengine/cache/*
+
+
+# CakePHP
+# ----------------------------------------------------------------------------------------------
+tmp/*
+config/database.php
+app/tmp/*
+app/config/database.php
+!empty
+
+
+# Rails
+# ----------------------------------------------------------------------------------------------
+*.rbc
+*.sassc
+.sass-cache
+capybara-*.html
+.rspec
+/.bundle
+/vendor/bundle
+/log/*
+/tmp/*
+/db/*.sqlite3
+/public/system/*
+/coverage/
+/spec/tmp/*
+**.orig
+rerun.txt
+pickle-email-*.html
+
+# Tags
+# ----------------------------------------------------------------------------------------------
+# Ignore tags created by etags and ctags
+TAGS
+tags
+
+
+# Vim
+# ----------------------------------------------------------------------------------------------
+.*.sw[a-z]
+*.un~
+Session.vim
+
+
+# SASS
+# ----------------------------------------------------------------------------------------------
+.sass-cache
