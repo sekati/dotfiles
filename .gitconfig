@@ -1,5 +1,4 @@
 # @see http://nuclearsquid.com/writings/git-tricks-tips-workflows/
-# @see http://stackoverflow.com/questions/2553786/how-do-i-alias-commands-in-git
 
 [user]
 	name = John Doe
@@ -83,6 +82,10 @@
 
 [alias]
 
+	# ADD
+	addp = add --patch 					# add only part of the commit to index		
+
+
 	# BRANCH
 	b = branch -v 						# branch verbose
 	br = branch -a --color -v 			# show all branches, even across remotes		
@@ -92,6 +95,10 @@
 	# CLONE
 	cl = clone 							# clone
 	clone-shallow = clone --depth 1 	# shallow clone a repository, because we don't care about history	
+	
+	
+	# CONFIG
+	conf = config --global -l			# show global git config
 	
 	
 	# COMMIT
@@ -116,11 +123,18 @@
 	df = diff 							# diff
 	dc = diff --cached 					# diff staged changes
 	last = diff HEAD^ 					# diff last committed change
+	staged = diff --cached 				# diff the index against the previous commit
 	unpushed-diff = diff origin/master..HEAD # show files committed by not pushed
+	
+	
+	# IGNORE
+    ign = ls-files -o -i --exclude-standard # Show files ignored by git
+
 	
 	# LOG
 	log = log --decorate --graph --date=short
 	l = log
+	lg = log -p
 	changes = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\" --name-status
 	short = log --pretty=format:\"%h %cr %cn %Cgreen%s%Creset\"
 	changelog = log --pretty=format:\" * %s\"
@@ -128,8 +142,14 @@
 	h = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	hist = h
 	history = h
-	unpushed = log origin/master..HEAD 	# show files committed but not yet pushed
-	nonpushed = unpushed
+	unpushed = log origin.. 			# show files committed but not yet pushed
+	ls = ls-files
+	last = log -1 HEAD					# show last log item
+	
+	
+	# MERGE
+	fold = merge --no-ff 				# merge the branch, keeping its commits in their own branch
+	
 	
 	# PULL
 	pl = pull 							# pull
@@ -138,6 +158,7 @@
 	# PUSH
 	ps = push							# push
 	push-tags = push origin master --tags
+ 	mirror = push --mirror 				# mirror branches (including deletions) and tags
 	
 	
 	# REBASE
@@ -148,13 +169,15 @@
 	
 	# REMOTE
 	r = remote -v 						# show remotes (verbose)
+	update-remotes = remote update --prune # update all remotes, pruning removed tracking branches
 	
 	
 	# RESET
-	unstage = reset HEAD 				# remove files from index (tracking)
+	unstage = reset HEAD --				# remove files from index (tracking)
 	uncommit = reset --soft HEAD^ 		# go back before last commit, with files in uncommitted state
 	filelog = log -u 					# show changes to a file
 	mt = mergetool 						# fire up the merge tool
+	goto = reset --hard					# put this branch at a particular ref		
 	
 	
 	# STASH
@@ -173,51 +196,29 @@
 	# TAG
 	t = tag -n 							# show tags with <n> lines of each tag message
 	
-
+	
+	# TRACK
+ 	track = checkout -t					# track a remote branch
+ 	
+ 	
 	# SVN
 	svnr = svn rebase
 	svnd = svn dcommit
 	svnl = svn log --oneline --show-commit
-	
-	# track a remote branch
- 	track = checkout -t	
 
 	
-
-	
-	# remove all local branches included in the current branch
-	cleanup = !sh -c 'git branch --merged | grep -E "^[^*]" --exclude "^\\s*master" | xargs -n1 git branch -d'
-	
-
-	
-	# delete a remote branch
-	delete = !sh -c 'git push "$0" :refs/heads/"$1"'	
-	
-	# remove a file from the index
-	unstage = reset HEAD --	
-
-
-	
-	# diff the index against the previous commit
-	staged = diff --cached	
 		
-	# add only part of the commit to index
-	addp = add --patch	
+
 
 	# search through the log
 	axe = !sh -c 'git log -S"$0"'
 	
-	# merge the branch, keeping its commits in their own branch
-	fold = merge --no-ff	
-	
-	# put this branch at a particular ref
-	goto = reset --hard	
+
 
 	# pull changes, show commits since last pull/push
 	up = !sh -c 'git pull "$0" HEAD && git log --pretty=format:\"%Cred%ae %Creset- %C(yellow)%s %Creset(%ar)\" HEAD@{1}..'
 
-	# update all remotes, pruning removed tracking branches
-	update-remotes = remote update --prune
+
 
 	# set a tag
 	label = tag -a
@@ -225,8 +226,7 @@
 	# tags a release with 'release/YYYY-MM-DD-HH-MM-SS'
 	tag-release = !sh -c 'git tag release/`date +%Y/%m/%d/%H%M`'	
 	
-	# mirror branches (including deletions) and tags
- 	mirror = push --mirror	
+	
  	
  	
 
@@ -237,6 +237,6 @@
 	l = log --graph --abbrev-commit --date=relative
 	h = log --format="%h %ad | %s%d [%an]" --graph --date=short
 	rvmaster = push origin HEAD:refs/for/master
-	conf = config --global -l
+	
 	unadd = reset HEAD 
 	
