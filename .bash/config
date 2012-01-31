@@ -34,19 +34,34 @@ WHITE1="1;37m"
 # PREFERENCES
 #########################################################################################
 
-USERNAME_COLOR=$YELLOW1
+USERNAME_COLOR=$CYAN0
 DELIMITER_COLOR=$WHITE1
-HOSTNAME_COLOR=$YELLOW0
-PATH_COLOR=$MAGENTA1
+HOSTNAME_COLOR=$MAGENTA1
+PATH_COLOR=$CYAN0
 
 if [ "`id -u`" -eq 0 ]; then
-        CURSOR_CHAR="#"
+	CURSOR_CHAR="#"
 else
-        CURSOR_CHAR="$"
+	CURSOR_CHAR="$"
 fi
+
 
 #########################################################################################
 # Customizations
 #########################################################################################
 
 PS1='\[\e[$USERNAME_COLOR\]\u\[\e[$DELIMITER_COLOR\]@\[\e[$HOSTNAME_COLOR\]\h\[\e[$PATH_COLOR\](\W)\[\e[0;0m\]\[$CURSOR_CHAR\] '
+
+# custom ls & cli colors
+export CLICOLOR="true"
+export LSCOLORS="Gxfxcxdxbxegedabagacad"
+
+# editor
+export EDITOR="vim"
+#export EDITOR="mate_wait"
+
+# path adjustment
+# export PATH=/usr/local/git/bin:/usr/local/bin:/usr/local/sbin:$PATH
+
+# java home
+#export JAVA_HOME=/Library/Java/Home
