@@ -15,6 +15,14 @@ love bash, git, ruby/rails, homebrew, vim, etc - &/or Debian/Ubuntu .
 you spend a lot of time working on Debian/Ubuntu VPS's then you should be quite 
 pleased.  
                                    
+## Requirements
+
+I'm going to assume you're like me & have a modern version of MacOS X (_10.7 at the time of this writing_), have [Homebrew](http://mxcl.github.com/homebrew/) or [MacPorts](http://www.macports.org/) installed. 
+
+With your package manager of choice I'd recommend you install the following: `bash-completion`.
+
+Don't worry; there is also plenty of Debian/Ubuntu goodness available in `bin/` for your VPS's.
+
 ## Installation
 
 *Warning:* _The Rakefile mentioned below is not yet ready for primetime but is FPO until I can complete the repo: please manually install dotfiles until this README changes: you have been warned._          
