@@ -1,0 +1,110 @@
+#!/bin/bash
+# Sekati: Site Backup Manager - for wordpress blogs & other dynamically fallable websites
+# @author jason m horwitz | sekati.com
+# Copyright (C) 2011 jason m horwitz, Sekat LLC. All Rights Reserved.
+
+NAME="SiteBackupManager"
+VERSION="1.0.0"
+DEL="******************************************************"
+CURDATE=`date +%Y%m%d`
+
+############################################################
+# Configure Site locations for Backup Here
+
+# backup directories
+BKROOT="/root/backups/"
+DAILY="daily/"
+WEEKLY="weekly/"
+MONTHLY="monthly/"
+SNAPSHOT="snapshots/"
+
+# bin utils
+TAR="$(which tar)"
+GZIP="$(which gzip)"
+GREP="$(which grep)"
+TR="$(which tr)"
+LS="$(which ls)"
+DU="$(which du)"
+
+# list the site root & directory names to be backed up here:
+SITEROOT="/var/www/"
+SITES=("hello.sekati.com" "nartane.com")
+
+############################################################
+
+printHeader() {
+        echo -e "\n$DEL\n$NAME v$VERSION\n$DEL\n"
+}
+
+printUsage() {
+        echo -e "Usage: $0 { daily | weekly | monthly | snapshot | list }\n" 
+}
+
+# die [goodbye_message]
+die() {
+        echo -e $@
+        exit 1
+}
+
+backupDB() {
+	echo -e "Backing Up Sites to $BKPATH ...\n"
+	for i in "${SITES[@]}"
+	do
+	  	:
+		# do whatever on $i
+		rm ${BKPATH}${i}-*
+		#$TAR cf - $i | $GZIP - > ${BKPATH}${i}-${CURDATE}.tar.gz
+		#tar cfP - /www/hello.sekati.com | gzip - > /root/backups/hello.sekati.com-${CURDATE}.tar.gz
+		$TAR cfP - ${SITEROOT}${i} | $GZIP - > ${BKPATH}${i}-${CURDATE}.tar.gz
+		echo -e "Backing up Site: $i ..."
+	done
+}
+
+printHeader
+
+case $1 in
+
+        daily)
+	BKPATH=$BKROOT$DAILY
+	backupDB
+        ;;
+
+        weekly)
+	BKPATH=$BKROOT$WEEKLY
+	backupDB
+        ;;
+
+        monthly)
+	BKPATH=$BKROOT$MONTHLY
+	backupDB
+        ;;
+
+        snapshot|snapshots)
+	BKPATH=$BKROOT$SNAPSHOT
+        backupDB
+	;;
+
+	list|show)
+	echo -e "Listing current backups in $BKROOT ...\n"
+	$DU -h $BKROOT | $GREP -v 'cron'
+
+	echo -e "\nDAILY: $BKROOT$DAILY"
+	$LS -sh --color $BKROOT$DAILY
+
+        echo -e "\nWEEKLY: $BKROOT$WEEKLY"
+        $LS -sh --color $BKROOT$WEEKLY
+
+        echo -e "\nMONTHLY: $BKROOT$MONTHLY"
+        $LS -sh --color $BKROOT$MONTHLY
+
+        echo -e "\nSNAPSHOTS: $BKROOT$SNAPSHOT"
+        $LS -sh --color $BKROOT$SNAPSHOT
+	;;
+
+        *|?)
+        printUsage
+        exit 1
+        ;;
+esac
+
+exit 0

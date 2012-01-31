@@ -20,12 +20,12 @@ pleased.
 I'm going to assume you're like me & have a modern version of MacOS X (_10.7 at the time of this writing_), have [Homebrew](http://mxcl.github.com/homebrew/) or [MacPorts](http://www.macports.org/) installed. 
 
 With your package manager of install the following: 
-
-* `bash-completion`
-* `byobu`
-* `links`
-* `htop`
-* `node` - _optional_
+                   
+* [`bash-completion`](http://bash-completion.alioth.debian.org/)
+* [`hub`](https://github.com/defunkt/hub)    
+* [`macvim`](http://macvim.org/OSX/index.php)
+* [`byobu`](https://launchpad.net/byobu)                         
+* [`htop`](http://htop.sourceforge.net/)
 
 Don't worry; there is also plenty of Debian/Ubuntu goodness available in `bin/` for your VPS's.
 

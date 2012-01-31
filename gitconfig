@@ -1,14 +1,19 @@
 [user]
-        name = John Doe
-        email = jd@example.com
+        name = Jason Horwitz
+        email = jason@sekati.com
         
 [github]
-        user = johndoe
+        user = sekati
         token = 12345678901234567890123456789012
+	; the 'hub' command pulls from $GITHUB_TOKEN
+	; don't set it here, break anything that requires it to here
+	; and the complain to the maker of said thing that they suck
+	; token = !sh -c 'echo $GITHUB_TOKEN'
 
 [core]
 	excludesfile = ~/.gitignore
 	editor = vim
+    	# editor = mate -wl1
 	pager=less
 	whitespace = fix,space-before-tab,tab-in-indent,trailing-space
 
@@ -54,6 +59,7 @@
 	stat = true
 
 [diff]
+    tool = opendif
 	# do basic rename and copy detection
 	renames = copies
 	# Tell git diff to use mnemonic prefixes (i)ndex, (w)ork tree, (c)ommit, (o)bject - instead of the standard (a) and (b) notation
@@ -89,122 +95,102 @@
 	# ADD
 	addp = add --patch 					# add only part of the commit to index		
 
-
 	# BRANCH
 	b = branch -v 						# branch verbose
-	br = branch -a --color -v 				# show all branches, even across remotes		
+	br = branch -a --color -v 			# show all branches, even across remotes		
 	branches = br
 	
-	
 	# CLONE
-	cl = clone 						# clone
-	clone-shallow = clone --depth 1 			# shallow clone a repository, because we don't care about history	
-	
+	cl = clone 							# clone
+	clone-shallow = clone --depth 1 	# shallow clone a repository, because we don't care about history	
 	
 	# CONFIG
-	conf = config --global -l				# show global git config
-	
+	conf = config --global -l 			# show global git config
 	
 	# COMMIT
 	ci = commit 						# commit
 	c = commit -m 						# commit with message
 	ca = commit -am 					# commit all with message
-	amend = commit --amend 					# amend your last commit
-	#amend = commit --amend -C HEAD 			# amend to the last commit
-	fix = commit -am "fix" 					# "fix" commit
-
+	amend = commit --amend 				# amend your last commit
+	#amend = commit --amend -C HEAD 	# amend to the last commit
+	fix = commit -am "fix" 				# "fix" commit
 
 	# CHECKOUT
 	co = checkout 						# checkout
 	nb = checkout -b 					# create and switch to a new branch (mnemonic: "git new branch branchname...")
 
-	
 	# CHERRY PICK
-	cp = cherry-pick -x 					# grab a change from a branch
+	cp = cherry-pick -x 				# grab a change from a branch
 	
-
 	# DIFF
-	df = diff 						# diff
+	df = diff 							# diff
 	dc = diff --cached 					# diff staged changes
 	last = diff HEAD^ 					# diff last committed change
-	staged = diff --cached 					# diff the index against the previous commit
+	staged = diff --cached 				# diff the index against the previous commit
 	unpushed-diff = diff origin/master..HEAD # show files committed by not pushed
 	
-	
 	# IGNORE
-    	ign = ls-files -o -i --exclude-standard # Show files ignored by git
-
+    ign = ls-files -o -i --exclude-standard # Show files ignored by git
 	
 	# LOG
 	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 	h = l
 	lg = log --format="%h %ad | %s%d [%an]" --graph --date=short
-	unpushed = log origin.. 				# show files committed but not yet pushed
+	unpushed = log origin.. 			# show files committed but not yet pushed
 	ls = ls-files
 	last = log -1 HEAD					# show last log item
 	who = shortlog -s --	
-
 	
 	# MERGE
-	fold = merge --no-ff 					# merge the branch, keeping its commits in their own branch
-	
+	fold = merge --no-ff 				# merge the branch, keeping its commits in their own branch
 	
 	# PULL
-	pl = pull 						# pull
-	
+	pl = pull 							# pull
 	
 	# PUSH
-	ps = push						# push
+	ps = push							# push
 	push-tags = push origin master --tags
- 	mirror = push --mirror 					# mirror branches (including deletions) and tags
+ 	mirror = push --mirror 			   # mirror branches (including deletions) and tags
 	rvmaster = push origin HEAD:refs/for/master
 	
-	
 	# REBASE
-	rc = rebase --continue 					# continue rebase
-	rs = rebase --skip 					# skip rebase
+	rc = rebase --continue 			   # continue rebase
+	rs = rebase --skip 				   # skip rebase
 	ri = rebase --interactive --autosquash	# interactive rebase
 	
-	
 	# REMOTE
-	r = remote -v 						# show remotes (verbose)
+	r = remote -v 					   # show remotes (verbose)
 	update-remotes = remote update --prune # update all remotes, pruning removed tracking branches
-	
 	
 	# RESET
 	unadd = reset HEAD
-	unstage = reset HEAD --					# remove files from index (tracking)
-	uncommit = reset --soft HEAD^ 				# go back before last commit, with files in uncommitted state
+	unstage = reset HEAD --				# remove files from index (tracking)
+	uncommit = reset --soft HEAD^ 		# go back before last commit, with files in uncommitted state
 	filelog = log -u 					# show changes to a file
 	mt = mergetool 						# fire up the merge tool
 	goto = reset --hard					# put this branch at a particular ref
 	
-	
 	# STASH
-	ss = stash 						# stash changes
+	ss = stash 							# stash changes
 	sl = stash list 					# list stashes
 	sa = stash apply 					# apply stash (restore changes)
 	sd = stash drop 					# drop stashes (destory changes)	
   	
-  	
 	# STATUS
-	s = status 						# status
+	s = status 							# status
 	st = status -sb						# better status
 	stat = status 						# status
 	
-	
 	# TAG
 	tags = show
-	t = tag -n 						# show tags with <n> lines of each tag message
+	t = tag -n 							# show tags with <n> lines of each tag message
 	tag-release = !sh -c 'git tag release/`date +%Y/%m/%d/%H%M`' # tags a release with 'release/YYYY-MM-DD-HH-MM-SS'
 	label = tag -a 						# set a tag
 	add-tag = label						# add a tag with given name
 	rm-tag = tag -d						# delete tag with given name
 	
-	
 	# TRACK
  	track = checkout -t					# track a remote branch
- 	
  	
 	# SVN
 	svnr = svn rebase
