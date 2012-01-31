@@ -1,3 +1,17 @@
+#########################################################################################
+# SEKATI BASHRC: ALIASES
+#
+# @author       Jason M Horwitz / sekati.com
+# @version      1.0.0
+# @license      http://www.opensource.org/licenses/mit-license.php
+#
+#########################################################################################
+
+
+#########################################################################################
+# ALIASES
+#########################################################################################
+
 alias ls='ls -G'
 alias la='ls -alh'
 alias LS='ls'
@@ -9,7 +23,7 @@ alias h='history | l'
 alias more='l'
 alias m='l'
 alias p='ps auwwwx'
-alias t='top'
+alias t='htop'
 alias j='jobs -l'
 alias u='uptime'
 alias x='chmod +x'
@@ -19,8 +33,7 @@ alias du='du -h'
 alias dirs='ls -alF | grep /'
 alias path='echo -e ${PATH//:/\\n}'
 alias lynx='links'
-#alias killall='/Users/jason/scripts/killall.sh'
-#alias portupdate='sudo port -v selfupdate'
+alias port-up='sudo port -v selfupdate'
 alias brew-up='brew update && brew upgrade'
 
 alias CD='cd'

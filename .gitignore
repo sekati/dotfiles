@@ -44,58 +44,58 @@ tmtags
 
 # CodeIgniter
 # ----------------------------------------------------------------------------------------------
-*/config/development
-*/logs/log-*.php
-*/logs/!index.html
-*/cache/*
-*/cache/!index.html
+#*/config/development
+#*/logs/log-*.php
+#*/logs/!index.html
+#*/cache/*
+#*/cache/!index.html
 
 
 # ExpressionEngine
 # ----------------------------------------------------------------------------------------------
 # Images
-images/avatars/
-images/captchas/
-images/smileys/
-images/member_photos/
-images/signature_attachments/
-images/pm_attachments/
+#images/avatars/
+#images/captchas/
+#images/smileys/
+#images/member_photos/
+#images/signature_attachments/
+#images/pm_attachments/
 
 # Caches
-sized/
-thumbs/
-_thumbs/
-*/expressionengine/cache/*
+#sized/
+#thumbs/
+#_thumbs/
+#*/expressionengine/cache/*
 
 
 # CakePHP
 # ----------------------------------------------------------------------------------------------
-tmp/*
-config/database.php
-app/tmp/*
-app/config/database.php
-!empty
+#tmp/*
+#config/database.php
+#app/tmp/*
+#app/config/database.php
+#!empty
 
 
 # Rails
 # ----------------------------------------------------------------------------------------------
-*.rbc
-*.sassc
-.bundle
-.sass-cache
-capybara-*.html
-.rspec
-/.bundle
-/vendor/bundle
-/log/*
-/tmp/*
-/db/*.sqlite3
-/public/system/*
-/coverage/
-/spec/tmp/*
-**.orig
-rerun.txt
-pickle-email-*.html
+#*.rbc
+#*.sassc
+#.bundle
+#.sass-cache
+#capybara-*.html
+#.rspec
+#/.bundle
+#/vendor/bundle
+#/log/*
+#/tmp/*
+#/db/*.sqlite3
+#/public/system/*
+#/coverage/
+#/spec/tmp/*
+#**.orig
+#rerun.txt
+#pickle-email-*.html
 
 # Tags
 # ----------------------------------------------------------------------------------------------
@@ -106,11 +106,11 @@ tags
 
 # Vim
 # ----------------------------------------------------------------------------------------------
-.*.sw[a-z]
-*.un~
+#.*.sw[a-z]
+#*.un~
 Session.vim
 
 
 # SASS
 # ----------------------------------------------------------------------------------------------
-.sass-cache
+#.sass-cache
