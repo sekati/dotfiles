@@ -1,11 +1,12 @@
-# @see http://loupgaroublond.blogspot.com/2008/09/keeping-private-config-files-private-in.html
+# Storing these env variables keeps them out of gitconfig.
+# @see http://help.github.com/set-your-user-name-email-and-github-token/
 
-# Set your git user info
+# Git user info
 export GIT_AUTHOR_NAME='Your Name'
 export GIT_AUTHOR_EMAIL='you@example.com'
 export GIT_COMMITTER_NAME='Your Name'
 export GIT_COMMITTER_EMAIL='you@example.com'
 
-# Optionally, set your GitHub credentials
+# GitHub credentials (optional)
 export GITHUB_USER='your_user_name'
 export GITHUB_TOKEN='your_github_token'

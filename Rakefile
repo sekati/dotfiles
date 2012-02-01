@@ -4,7 +4,7 @@ desc "Hook our dotfiles into system-standard positions."
 task :install => :submodules do
   # this has all the linkables from this directory.
   linkables = []
-  linkables += Dir.glob('{gitconfig,gitignore,gitsecrets}') if want_to_install?('git')
+  linkables += Dir.glob('{gitconfig,gitignore,gituser}') if want_to_install?('git')
   linkables += Dir.glob('{vim,vimrc}') if want_to_install?('vim')
   linkables += Dir.glob('{bash,bashrc,profile}') if want_to_install?('bash')
   linkables += Dir.glob('screenrc') if want_to_install?('screen')
@@ -35,10 +35,10 @@ task :install => :submodules do
         when 'S' then skip_all = true
         end
       end
-      #FileUtils.rm_rf(target) if overwrite || overwrite_all
-      #{}`mv "$HOME/.#{file}" "$HOME/.#{file}.backup"` if backup || backup_all
+      FileUtils.rm_rf(target) if overwrite || overwrite_all
+      {}`mv "$HOME/.#{file}" "$HOME/.#{file}.backup"` if backup || backup_all
     end
-    #{}`ln -s "#{source}" "#{target}"`
+    `ln -s "#{source}" "#{target}"`
   end
   success_msg("installed")
 end

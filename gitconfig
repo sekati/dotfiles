@@ -1,14 +1,12 @@
 [user]
-        name = Jason Horwitz
-        email = jason@sekati.com
+        name = John Doe
+        email = you@example.com
         
 [github]
-        user = sekati
-        token = 12345678901234567890123456789012
-	; the 'hub' command pulls from $GITHUB_TOKEN
-	; don't set it here, break anything that requires it to here
-	; and the complain to the maker of said thing that they suck
+        ; user = sekati
 	; token = !sh -c 'echo $GITHUB_TOKEN'
+        ; token = 12345678901234567890123456789012
+	; WARNING: The 'hub' command pulls $GITHUB_TOKEN env variable (@see ~/.gituser)
 
 [core]
 	excludesfile = ~/.gitignore
@@ -111,6 +109,7 @@
 	ci = commit 						# commit
 	c = commit -m 						# commit with message
 	ca = commit -am 					# commit all with message
+	cq = commit -a --allow-empty-message -m '' .		# commit all quick with no message
 	amend = commit --amend 				# amend your last commit
 	#amend = commit --amend -C HEAD 	# amend to the last commit
 	fix = commit -am "fix" 				# "fix" commit
