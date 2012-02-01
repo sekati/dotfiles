@@ -1,12 +1,13 @@
 [user]
-        name = John Doe
-        email = you@example.com
+        name = Jason Horwitz
+        email = jason@sekati.com
+	signingkey = 2207035D
         
 [github]
-        ; user = sekati
+        user = sekati
+	; WARNING: The 'hub' command pulls $GITHUB_TOKEN env variable (@see ~/.gituser)
 	; token = !sh -c 'echo $GITHUB_TOKEN'
         ; token = 12345678901234567890123456789012
-	; WARNING: The 'hub' command pulls $GITHUB_TOKEN env variable (@see ~/.gituser)
 
 [core]
 	excludesfile = ~/.gitignore
