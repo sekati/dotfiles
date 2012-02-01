@@ -1,3 +1,12 @@
+#########################################################################################
+# SEKATI BASHRC: PATHS
+#
+# @author       Jason M Horwitz / sekati.com
+# @version      1.0.0
+# @license      http://www.opensource.org/licenses/mit-license.php
+#
+#########################################################################################
+
 #export PATH="~/bin:~/.bin:/usr/local/homebrew/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/git/bin:$PATH"
 #export MANPATH="/usr/local/man:/usr/local/mysql/man:/usr/local/git/man:$MANPATH"
 

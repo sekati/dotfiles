@@ -8,6 +8,7 @@ task :install => :submodules do
   linkables += Dir.glob('{vim,vimrc}') if want_to_install?('vim')
   linkables += Dir.glob('{bash,bashrc,profile}') if want_to_install?('bash')
   linkables += Dir.glob('screenrc') if want_to_install?('screen')
+  linkables += Dir.glob('gemrc') if want_to_install?('ruby')  
 
   skip_all = false
   overwrite_all = false
@@ -34,10 +35,10 @@ task :install => :submodules do
         when 'S' then skip_all = true
         end
       end
-      FileUtils.rm_rf(target) if overwrite || overwrite_all
-      {}`mv "$HOME/.#{file}" "$HOME/.#{file}.backup"` if backup || backup_all
+      #FileUtils.rm_rf(target) if overwrite || overwrite_all
+      #{}`mv "$HOME/.#{file}" "$HOME/.#{file}.backup"` if backup || backup_all
     end
-    `ln -s "#{source}" "#{target}"`
+    #{}`ln -s "#{source}" "#{target}"`
   end
   success_msg("installed")
 end

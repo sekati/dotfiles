@@ -1,7 +1,7 @@
 Sekati Dotfiles
 ============================
               
-_These are my dotfiles; there are many like them, but these dotfiles are mine._ 
+_These are my dotfiles; there are many like them, but these are mine._ 
 
 * Version: 0.0.7
 * Developer: Jason M Horwitz
@@ -23,8 +23,7 @@ With your package manager of install the following:
                    
 * [`bash-completion`](http://bash-completion.alioth.debian.org/)
 * [`hub`](https://github.com/defunkt/hub)    
-* [`macvim`](http://macvim.org/OSX/index.php)
-* [`byobu`](https://launchpad.net/byobu)                         
+* [`macvim`](http://macvim.org/OSX/index.php)                    
 * [`htop`](http://htop.sourceforge.net/)
 
 Don't worry; there is also plenty of Debian/Ubuntu goodness available in `bin/` for your VPS's.

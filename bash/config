@@ -52,16 +52,23 @@ fi
 
 PS1='\[\e[$USERNAME_COLOR\]\u\[\e[$DELIMITER_COLOR\]@\[\e[$HOSTNAME_COLOR\]\h\[\e[$PATH_COLOR\](\W)\[\e[0;0m\]\[$CURSOR_CHAR\] '
 
-# custom ls & cli colors
-export CLICOLOR="true"
-export LSCOLORS="Gxfxcxdxbxegedabagacad"
-
-# editor
+# Editor
 export EDITOR="vim"
 #export EDITOR="mate_wait"
 
-# path adjustment
-# export PATH=/usr/local/git/bin:/usr/local/bin:/usr/local/sbin:$PATH
+# Custom ls & CLI colors
+export CLICOLOR="true"
+export LSCOLORS="Gxfxcxdxbxegedabagacad"
 
-# java home
-#export JAVA_HOME=/Library/Java/Home
+# Editor
+export EDITOR="vim"
+#export EDITOR="mate_wait"
+
+# Man pages colors
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
