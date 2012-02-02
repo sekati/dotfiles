@@ -1,3 +1,7 @@
+" Use Vim settings, rather than Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+set nocompatible
+
 set noswapfile
 
 " ----------------------------------------------------------------------------
@@ -8,15 +12,16 @@ set autoindent             " automatic indent new lines
 set smartindent            " be smart about it
 inoremap # X<BS>#
 set nowrap                 " do not wrap lines
-set softtabstop=2          " yep, two
-set shiftwidth=2           " ..
+" set softtabstop=2          " yep, two
+" set shiftwidth=2           " ..
 set tabstop=4
-set expandtab              " expand tabs to spaces
-set nosmarttab             " fuck tabs
+" set expandtab              " expand tabs to spaces
+" set nosmarttab             " fuck tabs
 set formatoptions+=n       " support for numbered/bullet lists
 "set textwidth=80          " wrap at 80 chars by default
 set virtualedit=block      " allow virtual edit in visual block ..
 syntax on                  " enable syntax highlighting
+filetype on                " @see http://vim-taglist.sourceforge.net/installation.html
 
 " ----------------------------------------------------------------------------
 "  Remapping
