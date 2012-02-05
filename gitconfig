@@ -96,8 +96,8 @@
 
 	# BRANCH
 	b = branch -v 						# branch verbose
+	branches = branch -v
 	br = branch -a --color -v 			# show all branches, even across remotes		
-	branches = br
 	
 	# CLONE
 	cl = clone 							# clone
