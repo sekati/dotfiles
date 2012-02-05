@@ -18,7 +18,7 @@ task :install => :submodules do
   linkables.each do |linkable|
     file = linkable.split('/').last
     source = "#{ENV["PWD"]}/#{linkable}"
-    target = "#{ENV["HOME"]}/.#{file}"
+    target = "#{file}" == 'bin' ? "#{ENV["HOME"]}/#{file}" : "#{ENV["HOME"]}/.#{file}"
 
     puts "--------"
     puts "file:   #{file}"

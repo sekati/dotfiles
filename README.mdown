@@ -3,7 +3,7 @@ Sekati Dotfiles
               
 _These are my dotfiles; there are many like them, but these are mine._ 
 
-* Version: 0.0.7
+* Version: 1.0.0
 * Developer: Jason M Horwitz
 * Website: [http://sekati.com](http://sekati.com)
 * Copyright: (c) 2011-2012 Jason M Horwitz / Sekati LLC.
@@ -26,11 +26,9 @@ With your package manager of install the following:
 * [`macvim`](http://macvim.org/OSX/index.php)                    
 * [`htop`](http://htop.sourceforge.net/)
 
-Don't worry; there is also plenty of Debian/Ubuntu goodness available in `bin/` for your VPS's.
+Don't worry; there is also plenty of Debian/Ubuntu goodness too in `bin/`.
 
 ## Installation
-
-*Warning:* _The Rakefile mentioned below is not yet ready for primetime but is FPO until I can complete the repo: please manually install dotfiles until this README changes: you have been warned._          
 
 - `git clone git://github.com/sekati/dotfiles ~/.dotfiles`
 - `cd ~/.dotfiles`

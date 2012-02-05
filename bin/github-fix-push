@@ -1,0 +1,16 @@
+#!/bin/sh
+# Sekati: Github fix origin push
+# @author jason m horwitz | sekati.com
+# Copyright (C) 2012 jason m horwitz, Sekat LLC. All Rights Reserved.
+
+if test -z "$1"; then
+	echo "Missing Argument: Please use $0 git://new.url.here \n"
+	echo "@see http://stackoverflow.com/questions/6565357/git-push-requires-username-and-password"
+	exit 1
+fi
+
+echo "Setting git remote set-url origin $1 ..."
+
+git remote set-url origin $1
+
+exit 0
