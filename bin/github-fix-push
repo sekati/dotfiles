@@ -3,13 +3,18 @@
 # @author jason m horwitz | sekati.com
 # Copyright (C) 2012 jason m horwitz, Sekat LLC. All Rights Reserved.
 
+if test -z "$GITHUB_USER"; then
+		echo "env variable for GITHUB_USER not set, failing miserably ..."
+		exit 1
+fi
+
 if test -z "$1"; then
-	echo "Missing Argument: Please use $0 git://new.url.here \n"
+	echo "Missing Argument: Please use $0 github-reponame \n"
 	echo "@see http://stackoverflow.com/questions/6565357/git-push-requires-username-and-password"
 	exit 1
 fi
 
-echo "Setting git remote set-url origin $1 ..."
+echo "Setting git remote set-url origin git://github.com/$GITHUB_USER/$1.git ..."
 
 git remote set-url origin $1
 
