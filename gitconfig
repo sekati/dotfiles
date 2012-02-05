@@ -1,18 +1,18 @@
 [user]
 	name = Jason Horwitz
-        email = jason@sekati.com
+	email = jason@sekati.com
 	signingkey = 2207035D
         
 [github]
-        user = sekati
+	user = sekati
 	; WARNING: The 'hub' command pulls $GITHUB_TOKEN env variable (@see ~/.gituser)
 	; token = !sh -c 'echo $GITHUB_TOKEN'
-        ; token = 12345678901234567890123456789012
+	; token = 12345678901234567890123456789012
 
 [core]
 	excludesfile = ~/.gitignore
 	editor = vim
-    	# editor = mate -wl1
+    # editor = mate -wl1
 	pager=less
 	whitespace = fix,space-before-tab,tab-in-indent,trailing-space
 
@@ -134,7 +134,7 @@
 	
 	# LOG
 	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-	h = l
+	h = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 	lg = log --format="%h %ad | %s%d [%an]" --graph --date=short
 	unpushed = log origin.. 			# show files committed but not yet pushed
 	ls = ls-files
