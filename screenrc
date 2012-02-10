@@ -97,4 +97,3 @@ terminfo wy75-42 nx:xo:Z0=\E[?3h\E[31h:Z1=\E[?3l\E[31h
 #bind I login on
 #bind O login off
 #bind } history
-

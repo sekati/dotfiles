@@ -16,6 +16,10 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
+alias rescreen='screen -q -raAd'
+alias re='rescreen'
+alias screen-re='rescreen'
+
 alias ls='ls -G'
 alias ll='ls -alF'
 alias la='ls -alh'
