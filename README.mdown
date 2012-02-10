@@ -24,7 +24,7 @@ With your package manager of install the following:
 * [`bash-completion`](http://bash-completion.alioth.debian.org/)
 * [`hub`](https://github.com/defunkt/hub)    
 * [`macvim`](http://macvim.org/OSX/index.php)                    
-* `ssh-copy-`
+* `ssh-copy-id`
 
 Don't worry; there is also plenty of Debian/Ubuntu goodness too in `bin/`.
 
