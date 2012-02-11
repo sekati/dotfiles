@@ -132,7 +132,9 @@
 	
 	# CONFIG
 	conf = config --global -l 			# show global git config
-	
+	aliases = !sh -c 'git config --global -l | grep alias' # show global aliases
+	user = !sh -c 'git config --global -l | grep user' # show git user settings
+
 	# COMMIT
 	ci = commit 						# commit
 	c = commit -m 						# commit with message
