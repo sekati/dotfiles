@@ -119,10 +119,11 @@
 
 	# ADD
 	addp = add --patch 					# add only part of the commit to index		
+	add-all = add -A					# add all files noting modifications/deletions
 
 	# BRANCH
-	b = branch -v 						# branch verbose
 	branches = branch -v
+	b = branch -v 						# branch verbose
 	br = branch -a --color -v 			# show all branches, even across remotes		
 	
 	# CLONE
@@ -135,7 +136,8 @@
 	# COMMIT
 	ci = commit 						# commit
 	c = commit -m 						# commit with message
-	ca = commit -am 					# commit all with message
+	ca = !sh -c 'git add && git commit -a -m "'$*'"' # add & commit at once 
+	cal = commit -a -m 					# commit all with message
 	cq = commit -a --allow-empty-message -m '' .		# commit all quick with no message
 	amend = commit --amend 				# amend your last commit
 	#amend = commit --amend -C HEAD 	# amend to the last commit
@@ -144,19 +146,21 @@
 	# CHECKOUT
 	co = checkout 						# checkout
 	nb = checkout -b 					# create and switch to a new branch (mnemonic: "git new branch branchname...")
-
+	revert = checkout HEAD^				# revert specified file (or all without given filename) to HEAD.
+	revert-master = checkout master^ 	# revert specified file (or all without given filename) to master.
+										# Note: you can revert a number of commits with HEAD~n || master~n									
 	# CHERRY PICK
 	cp = cherry-pick -x 				# grab a change from a branch
 	
 	# DIFF
-	df = diff 							# diff
-	dc = diff --cached 					# diff staged changes
-	last = diff HEAD^ 					# diff last committed change
+	df = diff 							# diff: working copy with the HEAD
+	dc = diff --cached 					# diff staged changes: index with HEAD
+	last = diff HEAD^ 					# diff last committed change: working copy with HEAD
 	staged = diff --cached 				# diff the index against the previous commit
 	unpushed-diff = diff origin/master..HEAD # show files committed by not pushed
 	
 	# IGNORE
-    ign = ls-files -o -i --exclude-standard # Show files ignored by git
+    ignored = ls-files -o -i --exclude-standard # Show files ignored by git
 	
 	# LOG
 	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
@@ -185,7 +189,7 @@
 	ri = rebase --interactive --autosquash	# interactive rebase
 	
 	# REMOTE
-	r = remote -v 					   # show remotes (verbose)
+	remotes = remote -v				   # show remotes (verbose)	
 	update-remotes = remote update --prune # update all remotes, pruning removed tracking branches
 	
 	# RESET
@@ -208,13 +212,16 @@
 	stat = status 						# status
 	
 	# TAG
-	tags = show
+	tags = tag -l						# show all tags
 	t = tag -n 							# show tags with <n> lines of each tag message
 	tag-release = !sh -c 'git tag release/`date +%Y/%m/%d/%H%M`' # tags a release with 'release/YYYY-MM-DD-HH-MM-SS'
 	label = tag -a 						# set a tag
-	add-tag = label						# add a tag with given name
-	rm-tag = tag -d						# delete tag with given name
-	
+	tag-add = label						# add a tag with given name
+	tag-rm = tag -d						# delete tag with given name
+	tag-replace = tag -f				# replace an existing tag with given name
+	tag-sign = tag -s -a				# GPG signed tag with given name
+	tag-verify = tag -v					# verify a GPG signed tag
+
 	# TRACK
  	track = checkout -t					# track a remote branch
  	
