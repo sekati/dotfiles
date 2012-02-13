@@ -1,6 +1,6 @@
 Sekati Dotfiles
 ============================
-              
+
 _These are my dotfiles; there are many like them, but these are mine._ 
 
 * Version: 1.0.0
@@ -13,17 +13,18 @@ _These are my dotfiles; there are many like them, but these are mine._
 This is my personal "best of ~" collection. The primary target are OS X users who
 love bash, git, ruby/rails, homebrew, vim, etc - &/or Debian/Ubuntu . 
 you spend a lot of time working on Debian/Ubuntu VPS's then you should be quite 
-pleased.  
-                                   
+pleased.
+
 ## Requirements
 
 I'm going to assume you're like me & have a modern version of MacOS X (_10.7 at the time of this writing_), have [Homebrew](http://mxcl.github.com/homebrew/) or [MacPorts](http://www.macports.org/) installed. 
 
 With your package manager of install the following: 
-                   
+
 * [`bash-completion`](http://bash-completion.alioth.debian.org/)
-* [`hub`](https://github.com/defunkt/hub)    
-* [`macvim`](http://macvim.org/OSX/index.php)                    
+* [`hub`](https://github.com/defunkt/hub)
+* [`macvim`](http://macvim.org/OSX/index.php)
+* [`irssi`](http://irssi.org/)
 * `ssh-copy-id`
 
 Don't worry; there is also plenty of Debian/Ubuntu goodness too in `bin/`.

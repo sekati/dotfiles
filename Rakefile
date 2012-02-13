@@ -8,6 +8,7 @@ task :install => :submodules do
   linkables += Dir.glob('{vim,vimrc}') if want_to_install?('vim')
   linkables += Dir.glob('{gitconfig,gitignore,gituser}') if want_to_install?('git')
   linkables += Dir.glob('screenrc') if want_to_install?('screen')
+  linkables += Dir.glob('irssi') if want_to_install?('irssi')
   linkables += Dir.glob('gemrc') if want_to_install?('ruby')  
   linkables += Dir.glob('bin') if want_to_install?('bin')    
 
