@@ -1,0 +1,9 @@
+# Custom Localized aliases & exports
+
+# hostname aliases
+alias production='ssh user@production.example.com'
+alias stage='ssh user@stage.example.com'
+
+# Irssi freenode Credentials
+IRC_PASS=your-password
+export IRC_PASS

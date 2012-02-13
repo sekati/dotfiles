@@ -4,7 +4,7 @@ desc "Hook our dotfiles into system-standard positions."
 task :install => :submodules do
   # this has all the linkables from this directory.
   linkables = []
-  linkables += Dir.glob('{bash,bashrc,profile}') if want_to_install?('bash')
+  linkables += Dir.glob('{bash,bashrc,profile,localrc}') if want_to_install?('bash')
   linkables += Dir.glob('{vim,vimrc}') if want_to_install?('vim')
   linkables += Dir.glob('{gitconfig,gitignore,gituser}') if want_to_install?('git')
   linkables += Dir.glob('screenrc') if want_to_install?('screen')
