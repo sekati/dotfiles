@@ -289,7 +289,7 @@ settings = {
     print_active_channel = "yes";
     autoclose_windows = "yes";
     autocreate_windows = "yes";
-    theme = "cyanic";
+    theme = "default";
     use_status_window = "no";
   };
   "perl/core/scripts" = {
