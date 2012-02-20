@@ -118,11 +118,12 @@
 [alias]
 
 	# ADD
+	a = add								# simple add
 	addp = add --patch 					# add only part of the commit to index		
 	add-all = add -A					# add all files noting modifications/deletions
 
 	# BRANCH
-	branches = branch -v
+	branches = branch -v				# branch verbose
 	b = branch -v 						# branch verbose
 	br = branch -a --color -v 			# show all branches, even across remotes		
 	
@@ -136,6 +137,8 @@
 	user = !sh -c 'git config --global -l | grep user' # show git user settings
 
 	# COMMIT
+	x = commit -m						# commit
+	xa = commit -a -m					# commit all
 	ci = commit 						# commit
 	c = commit -m 						# commit with message
 	ca = !sh -c 'git add && git commit -a -m "'$*'"' # add & commit at once 
