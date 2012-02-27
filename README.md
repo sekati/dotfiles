@@ -17,17 +17,18 @@ pleased.
 
 ## Requirements
 
-I'm going to assume you're like me & have a modern version of MacOS X (_10.7 at the time of this writing_), have [Homebrew](http://mxcl.github.com/homebrew/) or [MacPorts](http://www.macports.org/) installed. 
+I'm going to assume you're like me & have a modern version of MacOS X (_10.7 at the time of this writing_), have [Homebrew](http://mxcl.github.com/homebrew/) or [MacPorts](http://www.macports.org/) installed.
 
-With your package manager of install the following: 
+With your package manager of choice I suggest you install the following:
 
 * [`bash-completion`](http://bash-completion.alioth.debian.org/)
 * [`hub`](https://github.com/defunkt/hub)
+* [`git-flow`](https://github.com/nvie/gitflow)
 * [`macvim`](http://macvim.org/OSX/index.php)
 * [`irssi`](http://irssi.org/)
 * `ssh-copy-id`
 
-Don't worry; there is also plenty of Debian/Ubuntu goodness too in `bin/`.
+_Also, there is plenty of Debian/Ubuntu goodness too in `bin/` too (which I will someday strip out to a complete & organized deb dotfiles)._
 
 ## Installation
 
