@@ -128,7 +128,8 @@
 	ba = branch -a -v 					# show all branches, even across remotes
 	br = branch -r -v 					# show remote branches
 	bl = branch -l -v					# show local branches
-	
+	brd = branch -vrd					# delete a remote-tracking branch
+
 	# CLONE
 	cl = clone 							# clone
 	clone-shallow = clone --depth 1 	# shallow clone a repository, because we don't care about history	
@@ -145,7 +146,7 @@
 	c = commit -m 						# commit with message
 	ca = !sh -c 'git add && git commit -a -m "'$*'"' # add & commit at once 
 	cal = commit -a -m 					# commit all with message
-	cq = commit -a --allow-empty-message -m '' .		# commit all quick with no message
+	cq = commit -a --allow-empty-message -m '' . # commit all quick with no message
 	amend = commit --amend 				# amend your last commit
 	#amend = commit --amend -C HEAD 	# amend to the last commit
 	fix = commit -am "fix" 				# "fix" commit
@@ -169,6 +170,9 @@
 	staged = diff --cached 				# diff the index against the previous commit
 	unpushed-diff = diff origin/master..HEAD # show files committed by not pushed
 	
+	# GC
+	cleanup = gc --prune=now			# garbage collection with pruning
+
 	# IGNORE
     ignored = ls-files -o -i --exclude-standard # Show files ignored by git
 	
