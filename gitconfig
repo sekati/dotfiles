@@ -156,6 +156,9 @@
 	revert = checkout HEAD^				# revert specified file (or all without given filename) to HEAD.
 	revert-master = checkout master^ 	# revert specified file (or all without given filename) to master.
 										# Note: you can revert a number of commits with HEAD~n || master~n									
+	resolve-ours = checkout --ours 		# merge conflict scenario: checkout our version
+	resolve-theirs = checkout --theirs 	# merge conflict scenario: checkout their version
+
 	# CHERRY PICK
 	cp = cherry-pick -x 				# grab a change from a branch
 	
