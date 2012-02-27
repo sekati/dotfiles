@@ -12,7 +12,7 @@
 [core]
 	excludesfile = ~/.gitignore
 	editor = vim
-    # editor = mate -wl1
+	# editor = mate -wl1
 	pager=less
 	whitespace = fix,space-before-tab,tab-in-indent,trailing-space
 	quotepath = false
@@ -84,7 +84,7 @@
 	stat = true
 
 [diff]
-    tool = opendif
+    tool = opendiff
 	# do basic rename and copy detection
 	renames = copies
 	# Tell git diff to use mnemonic prefixes (i)ndex, (w)ork tree, (c)ommit, (o)bject - instead of the standard (a) and (b) notation
@@ -123,9 +123,11 @@
 	add-all = add -A					# add all files noting modifications/deletions
 
 	# BRANCH
-	branches = branch -v				# branch verbose
+	branches = branch -v 				# branch verbose
 	b = branch -v 						# branch verbose
-	br = branch -a --color -v 			# show all branches, even across remotes		
+	ba = branch -a -v 					# show all branches, even across remotes
+	br = branch -r -v 					# show remote branches
+	bl = branch -l -v					# show local branches
 	
 	# CLONE
 	cl = clone 							# clone
