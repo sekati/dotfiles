@@ -11,9 +11,9 @@ _These are my dotfiles; there are many like them, but these are mine._
 ## Overview
 
 This is my personal "best of ~" collection. The primary target are OS X users who
-love bash, git, ruby/rails, homebrew, vim, etc - &/or Debian/Ubuntu . 
-you spend a lot of time working on Debian/Ubuntu VPS's then you should be quite 
-pleased.
+love bash, git, homebrew, vim, et. al. If you spend a lot of time working on 
+Debian/Ubuntu VPS's then you should be quite pleased with some of the bin scripts 
+too.
 
 ## Requirements
 
