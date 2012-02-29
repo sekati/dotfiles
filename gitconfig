@@ -12,7 +12,7 @@
 [core]
 	excludesfile = ~/.gitignore
 	editor = vim
-    # editor = mate -wl1
+	# editor = mate -wl1
 	pager=less
 	whitespace = fix,space-before-tab,tab-in-indent,trailing-space
 	quotepath = false
@@ -84,7 +84,7 @@
 	stat = true
 
 [diff]
-    tool = opendif
+    tool = opendiff
 	# do basic rename and copy detection
 	renames = copies
 	# Tell git diff to use mnemonic prefixes (i)ndex, (w)ork tree, (c)ommit, (o)bject - instead of the standard (a) and (b) notation
@@ -123,10 +123,13 @@
 	add-all = add -A					# add all files noting modifications/deletions
 
 	# BRANCH
-	branches = branch -v				# branch verbose
+	branches = branch -v 				# branch verbose
 	b = branch -v 						# branch verbose
-	br = branch -a --color -v 			# show all branches, even across remotes		
-	
+	ba = branch -a -v 					# show all branches, even across remotes
+	br = branch -r -v 					# show remote branches
+	bl = branch -l -v					# show local branches
+	brd = branch -vrd					# delete a remote-tracking branch
+
 	# CLONE
 	cl = clone 							# clone
 	clone-shallow = clone --depth 1 	# shallow clone a repository, because we don't care about history	
@@ -143,7 +146,7 @@
 	c = commit -m 						# commit with message
 	ca = !sh -c 'git add && git commit -a -m "'$*'"' # add & commit at once 
 	cal = commit -a -m 					# commit all with message
-	cq = commit -a --allow-empty-message -m '' .		# commit all quick with no message
+	cq = commit -a --allow-empty-message -m '' . # commit all quick with no message
 	amend = commit --amend 				# amend your last commit
 	#amend = commit --amend -C HEAD 	# amend to the last commit
 	fix = commit -am "fix" 				# "fix" commit
@@ -154,6 +157,9 @@
 	revert = checkout HEAD^				# revert specified file (or all without given filename) to HEAD.
 	revert-master = checkout master^ 	# revert specified file (or all without given filename) to master.
 										# Note: you can revert a number of commits with HEAD~n || master~n									
+	resolve-ours = checkout --ours 		# merge conflict scenario: checkout our version
+	resolve-theirs = checkout --theirs 	# merge conflict scenario: checkout their version
+
 	# CHERRY PICK
 	cp = cherry-pick -x 				# grab a change from a branch
 	
@@ -164,6 +170,9 @@
 	staged = diff --cached 				# diff the index against the previous commit
 	unpushed-diff = diff origin/master..HEAD # show files committed by not pushed
 	
+	# GC
+	cleanup = gc --prune=now			# garbage collection with pruning
+
 	# IGNORE
     ignored = ls-files -o -i --exclude-standard # Show files ignored by git
 	

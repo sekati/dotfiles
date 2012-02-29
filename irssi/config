@@ -299,3 +299,4 @@ settings = {
   };
 };
 hilights = ( { text = "sekati"; nick = "yes"; word = "yes"; } );
+logs = { };
