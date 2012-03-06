@@ -170,6 +170,9 @@
 	staged = diff --cached 				# diff the index against the previous commit
 	unpushed-diff = diff origin/master..HEAD # show files committed by not pushed
 	
+	# FETCH
+	fetch-tags = fetch --tags 			# fetch tags
+
 	# GC
 	cleanup = gc --prune=now			# garbage collection with pruning
 
