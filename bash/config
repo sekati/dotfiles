@@ -34,10 +34,10 @@ WHITE1="1;37m"
 # PREFERENCES
 #########################################################################################
 
-USERNAME_COLOR=$CYAN0
+USERNAME_COLOR=$BLUE0
 DELIMITER_COLOR=$WHITE1
-HOSTNAME_COLOR=$MAGENTA1
-PATH_COLOR=$CYAN0
+HOSTNAME_COLOR=$BLUE1
+PATH_COLOR=$MAGENTA0
 
 if [ "`id -u`" -eq 0 ]; then
 	CURSOR_CHAR="#"
