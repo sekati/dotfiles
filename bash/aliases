@@ -45,6 +45,9 @@ alias lynx='links'
 alias port-up='sudo port -v selfupdate'
 alias brew-up='brew update && brew upgrade'
 
+alias ssh-fingerprint-rsa='ssh-keygen -lvf ~/.ssh/id_rsa.pub'
+alias ssh-fingerprint-dsa='ssh-keygen -lvf ~/.ssh/id_dsa.pub'
+
 alias CD='cd'
 alias ..='cd ..'
 alias ...='cd ../..'
