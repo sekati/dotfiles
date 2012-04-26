@@ -8,30 +8,34 @@
 
 # meta
 NAME="Gource Code Visualizer"
-VERSION="1.0.1"
+VERSION="1.0.2"
 
 # bins
 GOURCE="$(which gource)"
 FFMPEG="$(which ffmpeg)"
 
-# switch to script dir
+GPATH="$(pwd)"
 SCRIPT="$(basename "$(test -L "$0" && readlink "$0" || echo "$0")")"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
-echo "$DIR/$SCRIPT"
+#echo "$DIR/$SCRIPT"
 
 # PREFERENCES
-TITLE="" # "--title Code Visualization"
-ASSETS="~/Pictures/gource/"
-TIMESCALE=2 # default 1
-SKIPSECONDS=1 # default 3
-SECONDSPERDAY=5 # default 10
-CAMERAMODE="overview" # "track" - tracks active user & "overview" - keeps entire repo in view
-SIZE="1280x720" # "720×480"
+ASSETS="/Users/jason/Pictures/gource/"
+TIMESCALE=2 							# default 1
+SKIPSECONDS=1 							# default 3
+SECONDSPERDAY=5 						# default 10
+CAMERAMODE="overview" 					# "track" - tracks active user & "overview" - keeps entire repo in view
+SIZE="1280x720" 						# "720×480"
 MULTIPLIER="1.0"
 INTENSITY="1.0"
-OPTS="$TITLE --logo ${ASSETS}logo.png --user-image-dir ${ASSETS} --default-user-image ${ASSETS}Jason Horwitz.jpg --stop-at-end --auto-skip-seconds $SKIPSECONDS --time-scale $TIMESCALE --camera-mode $CAMERAMODE --seconds-per-day $SECONDSPERDAY --bloom-multiplier $MULTIPLIER --bloom-intensity $INTENSITY"
-OUTPUT="~/Desktop/gource.mp4"
+OUTPUT="/Users/jason/Desktop/gource.mp4"
+if test -z "$2"; then
+	TITLE=""
+else
+	TITLE="--title ${2}"
+fi
+OPTS="--path ${GPATH} --logo ${ASSETS}logo.png --user-image-dir ${ASSETS} --stop-at-end --auto-skip-seconds $SKIPSECONDS --time-scale $TIMESCALE --camera-mode $CAMERAMODE --seconds-per-day $SECONDSPERDAY --bloom-multiplier $MULTIPLIER --bloom-intensity $INTENSITY $TITLE"
 
 printHeader(){
         echo "$NAME v$VERSION"
@@ -39,19 +43,19 @@ printHeader(){
 
 printUsage() {
         printHeader
-        echo "Usage: $0 { play | export }"
+        echo "Usage: $0 { play | export } title"
 }
 
 case $1 in
         export)
 				printHeader
-				echo "Exporting Gource Visualization Video ..."
+				echo "Exporting Gource Visualization Video ...\nRepo: $GPATH\n$TITLE"
 				$GOURCE $OPTS -$SIZE -o - | $FFMPEG -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 -preset ultrafast -crf 1 -threads 0 -bf 0 $OUTPUT
                 ;;
 
                 play|show|display)
                 printHeader
-				echo "Playing Gource Visualization Video ..."
+				echo "Playing Gource Visualization Video ... \nRepo: $GPATH\n$TITLE"
                 $GOURCE $OPTS
 				;;
 
