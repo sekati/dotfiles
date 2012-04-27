@@ -24,7 +24,7 @@ cd $DIR
 ASSETS="/Users/jason/Pictures/gource/"
 TIMESCALE=2 							# default 1
 SKIPSECONDS=1 							# default 3
-SECONDSPERDAY=5 						# default 10
+SECONDSPERDAY=2 #5 						# default 10
 CAMERAMODE="overview" 					# "track" - tracks active user & "overview" - keeps entire repo in view
 SIZE="1280x720" 						# "720×480"
 MULTIPLIER="1.0"
