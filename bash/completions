@@ -2,14 +2,14 @@
 # SEKATI BASHRC: COMPLETIONS
 #
 # @author       Jason M Horwitz / sekati.com
-# @version      1.0.0
+# @version      1.0.1
 # @license      http://www.opensource.org/licenses/mit-license.php
 #
 #########################################################################################
 
-# include brew/ports bash completion
-if [ -f `brew --prefix`/etc/bash_completion ]; then
-    . `brew --prefix`/etc/bash_completion
+# include bash completion if available
+if [ -f /usr/local/etc/bash_completion ]; then
+    . /usr/local/etc/bash_completion
 fi
 if [ -f /opt/local/etc/bash_completion ]; then
     . /opt/local/etc/bash_completion
