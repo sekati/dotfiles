@@ -57,6 +57,8 @@ alias cd.='cd ..'
 alias cd..='cd ../..'                                             
 alias cd...='cd ../../..'
 
+alias rmdsstores='find ./ -type f | grep .DS_Store | xargs rm'
+
 alias archive='tar -cfz'
 alias www='cd /www/'
 alias apachectl='sudo /usr/sbin/apachectl'
