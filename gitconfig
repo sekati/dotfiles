@@ -248,3 +248,5 @@
 	svnd = svn dcommit
 	svnl = svn log --oneline --show-commit
 	
+[credential]
+	helper = osxkeychain
