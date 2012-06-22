@@ -166,6 +166,7 @@
 	# DIFF
 	df = diff 							# diff: working copy with the HEAD
 	dc = diff --cached 					# diff staged changes: index with HEAD
+	du = diff HEAD 						# diff uncommitted changes
 	last = diff HEAD^ 					# diff last committed change: working copy with HEAD
 	staged = diff --cached 				# diff the index against the previous commit
 	unpushed-diff = diff origin/master..HEAD # show files committed by not pushed
