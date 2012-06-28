@@ -8,11 +8,11 @@ set noswapfile
 "  Text Formatting
 " ----------------------------------------------------------------------------
 
-set autoindent             " automatic indent new lines
-set smartindent            " be smart about it
+set autoindent               " automatic indent new lines
+set smartindent              " be smart about it
 inoremap # X<BS>#
 set nowrap                 	 " do not wrap lines
-" set softtab:stop=2          " yep, two
+" set softtab:stop=2         " yep, two
 " set shiftwidth=2           " ..
 set tabstop=4
 " set expandtab              " expand tabs to spaces

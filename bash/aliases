@@ -57,7 +57,8 @@ alias cd.='cd ..'
 alias cd..='cd ../..'                                             
 alias cd...='cd ../../..'
 
-alias rmdsstores='find ./ -type f | grep .DS_Store | xargs rm'
+alias rm-dsstores='find ./ -type f | grep .DS_Store | xargs rm'
+alias rm-svn='rm -rf `find . -type d -name .svn`'
 
 alias archive='tar -cfz'
 alias www='cd /www/'
