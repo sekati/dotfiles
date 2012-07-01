@@ -83,3 +83,4 @@ complete -o default -o nospace -F _git g
 alias b='bundle'
 alias bi='bundle install'
 alias ber='bundle exec rake'
+alias rgen='rails generate'
