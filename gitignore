@@ -81,21 +81,23 @@ tmtags
 # ----------------------------------------------------------------------------------------------
 #*.rbc
 #*.sassc
-#.bundle
+.bundle
 #.sass-cache
 #capybara-*.html
 #.rspec
-#/.bundle
+/.bundle
 #/vendor/bundle
 #/log/*
+/log/*.log
 #/tmp/*
-#/db/*.sqlite3
+/db/*.sqlite3
 #/public/system/*
 #/coverage/
 #/spec/tmp/*
 #**.orig
 #rerun.txt
 #pickle-email-*.html
+bundler_stubs/
 
 # Tags
 # ----------------------------------------------------------------------------------------------
