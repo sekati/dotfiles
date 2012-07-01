@@ -78,3 +78,7 @@ alias g='git'
 
 # Autocomplete for 'g' as well @see http://nuclearsquid.com/writings/git-tricks-tips-workflows/
 complete -o default -o nospace -F _git g
+
+# rails related
+alias b='bundle'
+alias ber='bundle exec rake'
