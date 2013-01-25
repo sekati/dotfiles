@@ -24,8 +24,7 @@ if [ -d "$HOME/.rvm" ] ; then
 fi
 
 # Include VirtualBox if available
-
 if [ -d "/Applications/VirtualBox.app/Contents/MacOS" ] ; then
-	PATH=$PATH:/Applications/VirtualBox.app/Contents/MacOS/
+	PATH=$PATH:/Applications/VirtualBox.app/Contents/MacOS
 	export PATH
 fi
