@@ -89,3 +89,6 @@ alias rserv='rails server'
 
 # vagrant related
 alias v='vagrant'
+
+# alias mysql to allow 3306 passthru
+alias mysql='/usr/local/bin/mysql --protocol=TCP '
