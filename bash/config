@@ -54,7 +54,6 @@ PS1='\[\e[$USERNAME_COLOR\]\u\[\e[$DELIMITER_COLOR\]@\[\e[$HOSTNAME_COLOR\]\h\[\
 
 # Editor
 export EDITOR="vim"
-#export EDITOR="mate_wait"
 
 # Custom ls & CLI colors
 export CLICOLOR="true"
@@ -72,3 +71,6 @@ export LESS_TERMCAP_se=$'\E[0m'
 export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
+
+# Git Quiet Merging @see http://git-blame.blogspot.com/2012/02/anticipating-git-1710.html
+export GIT_MERGE_AUTOEDIT=no
