@@ -27,6 +27,7 @@ With your package manager of choice I suggest you install the following:
 * [`macvim`](http://macvim.org/OSX/index.php)
 * [`irssi`](http://irssi.org/)
 * [`ssh-copy-id`](http://www.thegeekstuff.com/2008/11/3-steps-to-perform-ssh-login-without-password-using-ssh-keygen-ssh-copy-id/)
+* [`tig`](https://github.com/jonas/tig)
 
 _Also, there is plenty of Debian/Ubuntu goodness too in `bin/` too (which I will someday strip out to a complete & organized deb dotfiles)._
 
