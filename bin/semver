@@ -1,27 +1,28 @@
 #!/bin/bash
 # Sekati: Semantic Version String Manipulator
 # @author jason m horwitz | sekati.com
-# Copyright (C) 2012 jason m horwitz, Sekat LLC. All Rights Reserved.
+# Copyright (C) 2013 jason m horwitz, Sekat LLC. All Rights Reserved.
 
 NAME="semver"
 DESC="Manipulate semantical version strings '<major>.<minor>.<patch>' (@see http://semver.org)."
-VERSION="1.0.0"
+VERSION="1.0.1"
 
-spacer() { 
-	echo "" 
+spacer() {
+	echo ""
 }
 
 usage() {
+	bin="$(basename $0)"
 	echo "$NAME v$VERSION - $DESC"
-	echo "usage: 	$0 { -m | -n | -p } { version }"
-	echo " 	$0 [ -m --major ] major version increment."
-	echo " 	$0 [ -n --minor ] minor version increment."
-	echo " 	$0 [ -p --patch ] patch version increment."		
-	echo " 	$0 [ -h --help  ] script usage."
+	echo "usage: 	$bin { -m | -n | -p } { version }"
+	echo " 	$bin [ -m ] major version increment."
+	echo " 	$bin [ -n ] minor version increment."
+	echo " 	$bin [ -p ] patch version increment."
+	echo " 	$bin [ -h --help  ] script usage."
 	die
 }
 
-die() { 
+die() {
 	echo $@
 	exit 1
 }
@@ -40,13 +41,6 @@ vpatch() {
 
 VIN="$BASH_ARGV"
 
-if test -z "$BASH_ARGV"; then
-	spacer
-	echo "Missing Version String Argument!"
-	spacer
-	usage
-fi
-
 while getopts "pmnh(-help)" flag
 do
 	case $flag in
@@ -61,7 +55,7 @@ do
 		die $VOUT
 		break;
 		;;
-		
+
 		n)
 		vminor
 		die $VOUT
@@ -72,14 +66,18 @@ do
 		vpatch
 		die $VOUT
 		;;
-		
+
 	esac
 done
 
 # Default to patch if version was passed without trigger
 if test -z "$BASH_ARGV"; then
+	spacer
+	echo "Missing Version String Argument!"
+	spacer
+	usage
 	exit 0
-else	
+else
 	vpatch
 	die $VOUT
 fi
