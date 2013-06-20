@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require 'open-uri'
+
+CMD = File.basename($0)
+URL = "http://whatthecommit.com/"
+DISCLAIMER = " (/b/ message)" # (courtesy of #{URL})"
+
+@show_disclaimer = true
+#doc = Nokogiri::HTML(open('http://whatthecommit.com/'))
+
+puts open(URL).select { |e| e =~ /^<p>/ }.first.gsub(/^<p>/, "").gsub("\n", "") + (@show_disclaimer ? DISCLAIMER : '')
