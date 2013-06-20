@@ -68,6 +68,7 @@ alias www='cd /www/'
 alias apachectl='sudo /usr/sbin/apachectl'
 alias apachectlgraceful='sudo /usr/sbin/apachectl graceful'
 alias sparktool='php tools/spark'
+alias artisan='php artisan'
 
 # Alias git to hub if it exists (for external github token storage)
 HUB="$(which hub)"
